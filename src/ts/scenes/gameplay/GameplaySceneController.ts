@@ -21,20 +21,14 @@ export class GameplaySceneController extends Phaser.Scene {
 		this.debugController = new DebugController(this);
 
 		this.debugController.init();
-
-		const resizeEndListener = (): void => {
-			this.debugController.log(`[On resize]\ndocumentSize:\nwidth: ${window.innerWidth}, hight: ${window.innerHeight}`);
-		};
+		// this.debugController.log("Start");
 
 		this.onClickRestart(() => {
-			window.document.removeEventListener("resizeEnd", resizeEndListener, false);
 			this.scene.start(SceneInfo.GAMEPLAY.key);
 		});
 
 		this.onCreateFinish((uiView) => {
 			this.debugController.show(true);
-			// Note: Dispatch to debug when resized
-			window.document.addEventListener("resizeEnd", resizeEndListener);
 		});
 	}
 

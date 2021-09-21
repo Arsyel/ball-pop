@@ -1,3 +1,4 @@
+import { CONFIG } from "../../info/GameInfo";
 import { FontAsset } from "../../library/AssetFont";
 import { BaseView } from "../../modules/core/BaseView";
 import { Button } from "../../modules/gameobjects/Button";
@@ -74,7 +75,7 @@ export class DebugSceneView implements BaseView {
 	private createDebugText ():void {
 		const { width, screenPercentage: displayPercentage } = this.screenUtility;
 		const position = this._headerLabelText.transform.getDisplayPositionFromCoordinate(0, 1);
-		const templateContent = `Text debug here!\nSeek device pixel ratio: ${window.devicePixelRatio}\n`;
+		const templateContent = `Ver: ${CONFIG.VERSION}\nMode: ${CONFIG.MODE}\n`;
 
 		this._debugText = new Text(this._scene, position.x, position.y, templateContent, {
 			wordWrap: { width: width * 0.95 },
