@@ -21,7 +21,6 @@ export class GameplaySceneController extends Phaser.Scene {
 		this.debugController = new DebugController(this);
 
 		this.debugController.init();
-		// this.debugController.log("Start");
 
 		this.onClickRestart(() => {
 			this.scene.start(SceneInfo.GAMEPLAY.key);
