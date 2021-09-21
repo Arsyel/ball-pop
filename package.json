@@ -4,6 +4,7 @@
   "description": "Ball Pop Game",
   "main": "src/index.js",
   "repository": "private",
+  "license": "ISC",
   "scripts": {
     "dev": "webpack-dev-server --config webpack/webpack.dev.js --env.build=game-dev --host --open",
     "sandbox": "webpack-dev-server --config webpack/webpack.dev.js --env.build=game-sandbox --host --open",
