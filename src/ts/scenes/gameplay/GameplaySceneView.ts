@@ -24,7 +24,7 @@ export class GameplaySceneView implements BaseView {
 
 	create (): void {
 		this._restartKey = this._scene.input.keyboard.addKey('R');
-		// TODO
+		// TODO Write code here!
 
 		this.event.emit(EventNames.onCreateFinish);
 	}

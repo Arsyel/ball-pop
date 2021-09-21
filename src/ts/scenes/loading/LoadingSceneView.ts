@@ -19,7 +19,7 @@ export class LoadingSceneView implements BaseView {
 
 	private createLoadingComponents (): void {
 		this._progressText = new Text(this._scene, this.screenUtility.centerX, this.screenUtility.centerY, '0%', {
-			color: '#ffd561',
+			color: '#fafafa',
 			fontStyle: 'bold',
 			align: 'center'
 		});
