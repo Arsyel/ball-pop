@@ -73,8 +73,10 @@ export class LoaderHelper {
 				}
 				scene.load.audio(assetInfo.key, CONFIG.BASE_ASSET_URL + assetInfo.url);
 			}
+			else if (assetInfo.type === AssetType.JSON) {
+				scene.load.json(assetInfo.key, CONFIG.BASE_ASSET_URL + assetInfo.url);
+			}
 			else {
-				// eslint-disable-next-line no-console
 				console.warn("Asset type is undefined:", assetInfo);
 			}
 		}

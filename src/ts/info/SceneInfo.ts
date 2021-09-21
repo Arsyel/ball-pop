@@ -1,10 +1,7 @@
 import { DebugSceneController } from "../scenes/debug/DebugSceneController";
 import { BootSceneController } from "../scenes/boot/BootSceneController";
 import { LoadingSceneController } from "../scenes/loading/LoadingSceneController";
-import { OrientationSceneController } from "../scenes/handler/orientation/OrientationSceneController";
-import { TitleSceneController } from "../scenes/title/TitleSceneController";
 import { GameplaySceneController } from "../scenes/gameplay/GameplaySceneController";
-import { ErrorSceneController } from "../scenes/handler/error/ErrorSceneController";
 
 export const SceneInfo = {
 	BOOT: {
@@ -15,21 +12,9 @@ export const SceneInfo = {
 		key: "DebugScene",
 		scene: DebugSceneController
 	},
-	ERROR: {
-		key: "ErrorScene",
-		scene: ErrorSceneController
-	},
 	LOADING: {
 		key: "LoadingScene",
 		scene: LoadingSceneController
-	},
-	ORIENTATION: {
-		key: "OrientationScene",
-		scene: OrientationSceneController
-	},
-	TITLE: {
-		key: "TitleScene",
-		scene: TitleSceneController
 	},
 	GAMEPLAY: {
 		key: "GameplayScene",

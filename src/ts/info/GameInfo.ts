@@ -10,9 +10,3 @@ export const enum GameState {
 	PAUSE,
 	GAMEOVER,
 }
-
-export const enum CameraKeyList {
-	MAIN = 'main',
-	BACKGROUND = 'bg',
-	UI = 'ui',
-};
