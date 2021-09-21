@@ -1,13 +1,10 @@
 {
-  "name": "phaser3-typescript",
-  "version": "0.8.5",
-  "description": "Phaser 3 Typescript with Webpack",
+  "name": "ball-pop",
+  "version": "0.0.1",
+  "description": "Ball Pop Game",
   "main": "src/index.js",
-  "author": "ReydVires",
-  "repository": {
-    "type": "git",
-    "directory": "https://github.com/ReydVires/phaser3-typescript"
-  },
+  "repository": "private",
+  "license": "ISC",
   "scripts": {
     "dev": "webpack-dev-server --config webpack/webpack.dev.js --env.build=game-dev --host --open",
     "sandbox": "webpack-dev-server --config webpack/webpack.dev.js --env.build=game-sandbox --host --open",

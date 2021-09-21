@@ -3,5 +3,6 @@ export const enum AssetType {
     SPRITESHEET = 'SPRITESHEET',
     ANIMATION = 'ANIMATION',
     AUDIO = 'AUDIO',
-    FONT = 'FONT'
+    FONT = 'FONT',
+    JSON = 'JSON',
 }

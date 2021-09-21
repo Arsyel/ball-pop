@@ -8,40 +8,40 @@ import { SceneList } from "./ts/info/SceneInfo";
 if (CONFIG.ENABLE_LOG) console.log("[CONFIG]", CONFIG);
 
 type CalculateScreenType = {
-	actualWidth: number,
-	actualHeight: number,
-	actualZoom: number,
-	isLandscape: boolean
+	width: number;
+	height: number;
+	zoom: number;
 };
+
+const smallResolution = (): boolean => {
+	return window.innerWidth < 480;
+};
+
+const toEven = (val: number): number => {
+	const result = Math.round(val);
+	return result + (result % 2);
+};
+
 const calculateScreen = (): CalculateScreenType => {
-	const targetWidth = window.innerWidth;
-	const targetHeight = window.innerHeight;
+	const dprModifier = (smallResolution() ? window.devicePixelRatio : 1);
+	return {
+		width: toEven(window.innerWidth * dprModifier),
+		height: toEven(window.innerHeight * dprModifier),
+		zoom: 1 / dprModifier
+	};
+};
 
-	let actualWidth = targetWidth < 480 ? targetWidth * window.devicePixelRatio : targetWidth;
-	let actualHeight = targetWidth < 480 ? targetHeight * window.devicePixelRatio : targetHeight;
-	let actualZoom = targetWidth < 480 ? 1 / window.devicePixelRatio : 1;
-	let isLandscape = targetWidth > targetHeight;
+const portraitConversion = (config: CalculateScreenType): CalculateScreenType => {
+	let width = config.width;
+	let height = config.height;
+	let isLandscape = width > height;
 
-	if (isLandscape) {
-		actualWidth = actualHeight * (3 / 4);
-	}
-
-	// Modulo 2 to prevent bleeding tile
-	actualWidth = Math.ceil(actualWidth);
-	actualHeight = Math.ceil(actualHeight);
-
-	if (actualWidth % 2 != 0) {
-		actualWidth++;
-	}
-	if (actualHeight % 2 != 0) {
-		actualHeight++;
-	}
+	width = !isLandscape ? width : height * (9 / 16);
 
 	return {
-		actualWidth,
-		actualHeight,
-		actualZoom,
-		isLandscape
+		width: toEven(width),
+		height: toEven(height),
+		zoom: config.zoom
 	};
 };
 
@@ -50,7 +50,7 @@ meta.name = "viewport";
 meta.content = "initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no";
 document.head.appendChild(meta);
 
-const screenProfile = calculateScreen();
+const screenProfile = portraitConversion(calculateScreen());
 
 const isFirefox = /Firefox/i.test(navigator.userAgent);
 
@@ -65,9 +65,9 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 	backgroundColor: (CONFIG.ON_DEBUG) ? '#3498db' : '#181818',
 	scale: {
 		mode: Phaser.Scale.NONE,
-		width: screenProfile.actualWidth,
-		height: screenProfile.actualHeight,
-		zoom: screenProfile.actualZoom,
+		width: screenProfile.width,
+		height: screenProfile.height,
+		zoom: screenProfile.zoom,
 		autoRound: true,
 	},
 	seed: [((+new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16))],
@@ -99,9 +99,9 @@ window.addEventListener("load", () => {
 	}, false);
 
 	window.document.addEventListener("resizeEnd", (e) => {
-		const { actualWidth, actualHeight, actualZoom } = calculateScreen();
-		game.scale.resize(actualWidth, actualHeight);
-		game.scale.setZoom(actualZoom);
+		const { width, height, zoom } = portraitConversion(calculateScreen());
+		game.scale.resize(width, height);
+		game.scale.setZoom(zoom);
 	});
 
 });
