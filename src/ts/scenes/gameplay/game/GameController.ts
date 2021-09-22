@@ -2,7 +2,7 @@ import { CustomTypes } from "../../../../types/custom";
 import { GameState } from "../../../info/GameInfo";
 
 type OnInitialization = (data: CustomTypes.Gameplay.GameData) => void;
-type OnTimerChange = (time: number) => void;
+type OnTimerChange = (timer: number) => void;
 type OnTimeout = CustomTypes.General.FunctionNoParam;
 type OnComboActive = (value: number) => void;
 
@@ -29,7 +29,7 @@ export class GameController {
   private _totalScore: number;
 
   constructor () {
-  	this._event = new Phaser.Events.EventEmitter();
+    this._event = new Phaser.Events.EventEmitter();
     this._state = GameState.PREPARING;
   }
 
@@ -42,6 +42,8 @@ export class GameController {
   }
 
   init (data: CustomTypes.Gameplay.GameData): void {
+    this._state = GameState.PLAYING;
+
     this._timerTick = TIME_TICK_BASE;
     this._timer = data.timer;
 
