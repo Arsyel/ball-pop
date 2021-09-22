@@ -3,11 +3,11 @@ type GameObject = (Phaser.GameObjects.GameObject & Phaser.GameObjects.Components
 export class Transform {
 
 	private _gameObject: GameObject;
-	private _cameraRef: Phaser.Cameras.Scene2D.Camera;
+	private _scaleManager: Phaser.Scale.ScaleManager;
 
 	constructor (scene: Phaser.Scene, gameObject: GameObject) {
 		this._gameObject = gameObject;
-		this._cameraRef = scene.cameras.main;
+		this._scaleManager = scene.scale;
 	}
 
 	get position (): Phaser.Math.Vector2 { return new Phaser.Math.Vector2(this._gameObject.x, this._gameObject.y); }
@@ -32,7 +32,7 @@ export class Transform {
 	}
 
 	setDisplayWidthAsScreenWidth (matchHeightToAspectRatio = false): void {
-		this.setDisplayWidth(this._cameraRef.width, matchHeightToAspectRatio);
+		this.setDisplayWidth(this._scaleManager.width, matchHeightToAspectRatio);
 	}
 
 	setDisplayHeight (height: number, matchWidthToAspectRatio = false): void {
@@ -43,7 +43,7 @@ export class Transform {
 	}
 
 	setDisplayHeightAsScreenHeight (matchWidthToAspectRatio = false): void {
-		this.setDisplayHeight(this._cameraRef.height, matchWidthToAspectRatio);
+		this.setDisplayHeight(this._scaleManager.height, matchWidthToAspectRatio);
 	}
 
 	setDisplayHeightToAspectRatio (): void {
@@ -87,7 +87,7 @@ export class Transform {
 
 	setToScreenPercentage (percentage?: number): void {
 		const DEFAULT_SCREEN_WIDTH = 1080;
-		const value = percentage || (this._cameraRef.width / DEFAULT_SCREEN_WIDTH);
+		const value = percentage || (this._scaleManager.width / DEFAULT_SCREEN_WIDTH);
 		this.setDisplayWidth(value * this._gameObject.width, true);
 	}
 
