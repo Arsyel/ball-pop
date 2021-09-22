@@ -62,6 +62,14 @@ export declare namespace CustomTypes {
             timer: number;
         }
 
+        type GeneralData = {
+            screenRatio: number;
+        }
+
+        type BallCollection = {
+            [x: string]: MatterSprite;
+        }
+
     }
 
 }
