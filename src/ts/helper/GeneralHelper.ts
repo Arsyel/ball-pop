@@ -7,3 +7,7 @@ export function ShuffleArray (array: []): [] {
 	}
 	return array;
 }
+
+export const LAYER_DEPTH = {
+	UI: 100,
+};
