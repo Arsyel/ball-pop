@@ -1,7 +1,7 @@
 import { LoadingSceneView } from "./LoadingSceneView";
 import { LoaderHelper } from "../../helper/LoaderHelper";
-import { Assets as LoadingAsset } from "../../library/AssetLoading";
-import { Assets as GameplayAsset } from "../../library/AssetGameplay";
+import { Assets as LoadingAsset } from "../../collections/AssetLoading";
+import { Assets as GameplayAsset } from "../../collections/AssetGameplay";
 import { CustomTypes } from "../../../types/custom";
 import { SceneInfo } from "../../info/SceneInfo";
 import { CONFIG } from "../../info/GameInfo";

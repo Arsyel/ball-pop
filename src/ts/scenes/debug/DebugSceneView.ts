@@ -1,5 +1,5 @@
 import { CONFIG } from "../../info/GameInfo";
-import { FontAsset } from "../../library/AssetFont";
+import { FontAsset } from "../../collections/AssetFont";
 import { BaseView } from "../../modules/core/BaseView";
 import { Button } from "../../modules/gameobjects/Button";
 import { Rectangle } from "../../modules/gameobjects/Rectangle";

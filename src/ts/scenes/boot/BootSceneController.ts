@@ -2,7 +2,7 @@ import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilCont
 import { LoaderHelper } from "../../helper/LoaderHelper";
 import { AudioController } from "../../modules/audio/AudioController";
 import { SceneInfo } from "../../info/SceneInfo";
-import { FontList } from "../../library/AssetFont";
+import { FontList } from "../../collections/AssetFont";
 
 export class BootSceneController extends Phaser.Scene {
 
