@@ -27,7 +27,7 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController = new GameController();
     this.ballController = new BallController(this);
 
-    this.gameController.onInitialization(({ timer }) => {
+    this.gameController.onInitialization(({ timer, maxLiveBall }) => {
       this.view.updateTimerText(timer);
     });
 
@@ -43,20 +43,30 @@ export class GameplaySceneController extends Phaser.Scene {
       this.view.updateComboText(combo);
     });
 
+    this.gameController.onNeedLiveBall(() => {
+      const slightLeft = this.scale.width * 0.3;
+      const slightRight = this.scale.width * 0.675;
+      const x: number = Phaser.Utils.Array.GetRandom([this.scale.width/2, slightLeft, slightRight]);
+      this.ballController.spawnBall(x, 0);
+    });
+
     this.onClickRestart(() => {
       this.scene.start(SceneInfo.GAMEPLAY.key);
     });
 
     this.onCreateFinish((uiView) => {
       this.debugController.init();
-      this.gameController.init({ timer: 60 });
+      this.gameController.init({
+        timer: 60,
+        maxLiveBall: 40,
+      });
       this.ballController.init({ screenRatio: this.view.screenRatio });
 
       this.debugController.show(true);
     });
 
-    this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
-      this.ballController.spawnBall(pointer.worldX, pointer.worldY);
+    this.input.on("pointerup", () => {
+      this.gameController.reduceLiveBall(); // FIXME
     });
   }
 
