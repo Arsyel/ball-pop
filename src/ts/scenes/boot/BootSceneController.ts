@@ -6,20 +6,20 @@ import { FontList } from "../../collections/AssetFont";
 
 export class BootSceneController extends Phaser.Scene {
 
-	constructor () {
-		super({key: SceneInfo.BOOT.key});
-	}
+  constructor () {
+    super({key: SceneInfo.BOOT.key});
+  }
 
-	init (): void {}
+  init (): void {}
 
-	create (): void {
-		Promise.all([
-			ScreenUtilController.getInstance().init(this),
-			AudioController.getInstance().init(this),
-			LoaderHelper.LoadFonts(FontList()),
-		]).then(() => {
-			this.scene.launch(SceneInfo.LOADING.key);
-		}).catch((error) => Error("Bootscene::\n" + error));
-	}
+  create (): void {
+    Promise.all([
+      ScreenUtilController.getInstance().init(this),
+      AudioController.getInstance().init(this),
+      LoaderHelper.LoadFonts(FontList()),
+    ]).then(() => {
+      this.scene.launch(SceneInfo.LOADING.key);
+    }).catch((error) => Error("Bootscene::\n" + error));
+  }
 
 }

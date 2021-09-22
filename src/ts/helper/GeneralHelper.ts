@@ -1,13 +1,13 @@
 export function ShuffleArray (array: []): [] {
-	let length = array.length;
-	let index: number;
-	while (length > 0) {
-		index = Math.floor(Math.random() * length--);
-		[array[length], array[index]] = [array[index], array[length]];
-	}
-	return array;
+  let length = array.length;
+  let index: number;
+  while (length > 0) {
+    index = Math.floor(Math.random() * length--);
+    [array[length], array[index]] = [array[index], array[length]];
+  }
+  return array;
 }
 
 export const LAYER_DEPTH = {
-	UI: 100,
+  UI: 100,
 };
