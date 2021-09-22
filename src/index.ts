@@ -62,7 +62,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 	banner: { hidePhaser: !CONFIG.ENABLE_LOG },
 	type: renderType,
 	parent: 'game',
-	backgroundColor: (CONFIG.ON_DEBUG) ? '#3498db' : '#181818',
+	backgroundColor: (CONFIG.ON_DEBUG) ? '#3498db' : '#60bb55',
 	scale: {
 		mode: Phaser.Scale.NONE,
 		width: screenProfile.width,
@@ -70,9 +70,16 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 		zoom: screenProfile.zoom,
 		autoRound: true,
 	},
-	seed: [((+new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16))],
 	scene: SceneList(),
-	input: { activePointers: 3 },
+	physics: {
+		default: "matter",
+		matter: {
+			debug: (CONFIG.MODE === "SANDBOX"),
+			correction: 2,
+			positionIterations: 7,
+		},
+	},
+	input: { activePointers: 2 },
 	dom: {
 		createContainer: true
 	},

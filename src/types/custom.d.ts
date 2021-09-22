@@ -4,7 +4,7 @@ export declare namespace CustomTypes {
 
     type CONFIG = {
         VERSION: string;
-        MODE: 'DEVELOPMENT' | 'STAGING' | 'PRODUCTION';
+        MODE: 'SANDBOX' | 'DEVELOPMENT' | 'STAGING' | 'PRODUCTION';
         ENABLE_LOG: boolean;
         ON_DEBUG: boolean;
         ENABLE_PHYSICS_DEBUG: boolean;
@@ -57,9 +57,11 @@ export declare namespace CustomTypes {
     }
 
     namespace Gameplay {
+
         type GameData = {
             timer: number;
         }
+
     }
 
 }
