@@ -5,12 +5,14 @@ type OnInitialization = (data: CustomTypes.Gameplay.GameData) => void;
 type OnTimerChange = (timer: number) => void;
 type OnTimeout = CustomTypes.General.FunctionNoParam;
 type OnComboActive = (value: number) => void;
+type OnNeedLiveBall = (currentLiveBall: number) => void;
 
 export const enum EvenNames {
   onInitialization = "onInitialization",
   onTimerChange = "onTimerChange",
   onTimeout = "onTimeout",
   onComboActive = "onComboActive",
+  onNeedLiveBall = "onNeedLiveBall",
 };
 
 const TIME_TICK_BASE = 1;
@@ -27,6 +29,10 @@ export class GameController {
   private _comboCount: number;
 
   private _totalScore: number;
+
+  private _liveBallTick: number;
+  private _maxLiveBall: number;
+  private _currentLiveBall: number;
 
   constructor () {
     this._event = new Phaser.Events.EventEmitter();
@@ -52,6 +58,10 @@ export class GameController {
 
     this._totalScore = 0;
 
+    this._liveBallTick = TIME_TICK_BASE;
+    this._maxLiveBall = data.maxLiveBall;
+    this._currentLiveBall = 0;
+
     this._event.emit(EvenNames.onInitialization, data);
   }
 
@@ -67,6 +77,11 @@ export class GameController {
 
   addScore (value: number = 1): void {
     this._totalScore += value;
+  }
+
+  reduceLiveBall (value: number = 1): void {
+    const newValue = this._currentLiveBall - value;
+    this._currentLiveBall = (newValue <= 0) ? 0 : newValue;
   }
 
   update (time: number, dt: number): void {
@@ -91,6 +106,21 @@ export class GameController {
     if (this._comboTimeTick <= 0 && !!this._comboCount) {
       this._comboCount = 0;
     }
+
+    if (this._state !== GameState.PLAYING) return;
+
+    const isAllBallLive = this._currentLiveBall >= this._maxLiveBall;
+    if (!isAllBallLive) {
+      const modifyDeltaTime = deltaTime * 6.5;
+      this._liveBallTick -= modifyDeltaTime;
+
+      if (this._liveBallTick <= 0) {
+        this._liveBallTick += TIME_TICK_BASE;
+        this._currentLiveBall += 1;
+        this._event.emit(EvenNames.onNeedLiveBall, this._currentLiveBall);
+      }
+    }
+
   }
 
   onInitialization (event: OnInitialization): void {
@@ -107,6 +137,10 @@ export class GameController {
 
   onComboActive (event: OnComboActive): void {
     this._event.on(EvenNames.onComboActive, event);
+  }
+
+  onNeedLiveBall (event: OnNeedLiveBall): void {
+    this._event.on(EvenNames.onNeedLiveBall, event);
   }
 
 }

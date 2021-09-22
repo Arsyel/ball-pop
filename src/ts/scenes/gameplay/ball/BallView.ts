@@ -43,8 +43,9 @@ export class BallView implements BaseView {
   }
 
   createBall (x: number, y: number): void {
-    const textureKey = Assets.ball_a.key;
-    const ballScaleModifier = 1.685;
+    const textures = [Assets.ball_a.key, Assets.ball_b.key, Assets.ball_c.key];
+    const textureKey = Phaser.Utils.Array.GetRandom(textures);
+    const ballScaleModifier = 1.695;
 
     const ball = new MatterSprite(this._scene, 0, 0, textureKey, 0);
     ball.transform.setToScaleDisplaySize(this._data.screenRatio * ballScaleModifier);
