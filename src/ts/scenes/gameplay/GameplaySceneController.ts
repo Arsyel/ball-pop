@@ -25,20 +25,19 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController = new GameController();
 
     this.gameController.onInitialization(({ timer }) => {
-      console.log("Game timer:", timer);
+      this.view.updateTimerText(timer);
     });
 
-    this.gameController.onTimerChange((time) => {
-      console.log("Timer:", time);
+    this.gameController.onTimerChange((timer) => {
+      this.view.updateTimerText(timer);
     });
 
     this.gameController.onTimeout(() => {
-      console.log("Times up!");
       this.gameController.setGameoverState();
     });
 
     this.gameController.onComboActive((combo) => {
-      console.log(`Combo: +${combo}`);
+      this.view.updateComboText(combo);
     });
 
 		this.onClickRestart(() => {
@@ -51,6 +50,10 @@ export class GameplaySceneController extends Phaser.Scene {
 
 			this.debugController.show(true);
 		});
+
+    this.input.on("pointerup", () => {
+      this.gameController.addCombo(); // FIXME Test combo trigger
+    });
 	}
 
 	create (): void {
