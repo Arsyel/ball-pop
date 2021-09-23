@@ -134,4 +134,8 @@ export class GameplaySceneView implements BaseView {
 	  this._comboText.setText(`+${value}`);
 	}
 
+	updateScoreText (value: number): void {
+	  this._scoreText.setText(value.toString());
+	}
+
 }

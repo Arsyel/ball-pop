@@ -5,6 +5,7 @@ import { SceneInfo } from "../../info/SceneInfo";
 import { CustomTypes } from "../../../types/custom";
 import { GameController } from "./game/GameController";
 import { BallController } from "./ball/BallController";
+import { GameState } from "../../info/GameInfo";
 
 type OnCreateFinish = CustomTypes.General.FunctionWithParams;
 
@@ -29,6 +30,8 @@ export class GameplaySceneController extends Phaser.Scene {
 
     this.gameController.onInitialization(({ timer, maxLiveBall }) => {
       this.view.updateTimerText(timer);
+      this.ballController.init({ screenRatio: this.view.screenRatio });
+      this.ballController.enableTapBall();
     });
 
     this.gameController.onTimerChange((timer) => {
@@ -37,6 +40,7 @@ export class GameplaySceneController extends Phaser.Scene {
 
     this.gameController.onTimeout(() => {
       this.gameController.setGameoverState();
+      this.ballController.disableTapBall();
     });
 
     this.gameController.onComboActive((combo) => {
@@ -50,6 +54,21 @@ export class GameplaySceneController extends Phaser.Scene {
       this.ballController.spawnBall(x, 0);
     });
 
+    this.ballController.onDestroy((removedLiveBall) => {
+      this.gameController.reduceLiveBall(removedLiveBall);
+    });
+
+    this.ballController.onTapBall((targetedDestroyBallIds) => {
+      if (this.gameController.state !== GameState.PLAYING) return;
+
+      this.ballController.destroy(targetedDestroyBallIds);
+
+      this.gameController.addCombo();
+      this.gameController.addScore(targetedDestroyBallIds.length);
+
+      this.view.updateScoreText(this.gameController.totalScore);
+    });
+
     this.onClickRestart(() => {
       this.scene.start(SceneInfo.GAMEPLAY.key);
     });
@@ -60,13 +79,8 @@ export class GameplaySceneController extends Phaser.Scene {
         timer: 60,
         maxLiveBall: 40,
       });
-      this.ballController.init({ screenRatio: this.view.screenRatio });
 
       this.debugController.show(true);
-    });
-
-    this.input.on("pointerup", () => {
-      this.gameController.reduceLiveBall(); // FIXME
     });
   }
 
