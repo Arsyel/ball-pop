@@ -9,18 +9,18 @@ export class ScreenUtilController {
 	private constructor () {}
 
 	static getInstance (): ScreenUtilController {
-		if (!ScreenUtilController.instance) {
-			ScreenUtilController.instance = new ScreenUtilController();
-		}
-		return ScreenUtilController.instance;
+	  if (!ScreenUtilController.instance) {
+	    ScreenUtilController.instance = new ScreenUtilController();
+	  }
+	  return ScreenUtilController.instance;
 	}
 
 	init (scene: Phaser.Scene, defaultWidth = 1080, defaultHeight = 1920): Promise<void> {
-		return new Promise((resolve) => {
-			this._scene = scene;
-			this.setDefaultScreenSize(defaultWidth, defaultHeight);
-			resolve();
-		});
+	  return new Promise((resolve) => {
+	    this._scene = scene;
+	    this.setDefaultScreenSize(defaultWidth, defaultHeight);
+	    resolve();
+	  });
 	}
 
 	get width (): number { return this._scene.cameras.main.width; }
@@ -36,15 +36,15 @@ export class ScreenUtilController {
 	get screenPercentage (): number { return this.width / this._defaultWidth; }
 
 	get defaultScreenSize (): Object {
-		return {
-			width: this._defaultWidth,
-			height: this._defaultHeight
-		};
+	  return {
+	    width: this._defaultWidth,
+	    height: this._defaultHeight
+	  };
 	}
 
 	setDefaultScreenSize (width: number, height: number): void {
-		this._defaultWidth = width;
-		this._defaultHeight = height;
+	  this._defaultWidth = width;
+	  this._defaultHeight = height;
 	}
 
 }

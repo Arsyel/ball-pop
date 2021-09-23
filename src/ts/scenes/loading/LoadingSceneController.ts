@@ -11,44 +11,44 @@ export class LoadingSceneController extends Phaser.Scene {
 	view: LoadingSceneView;
 
 	constructor () {
-		super({key:SceneInfo.LOADING.key});
+	  super({key:SceneInfo.LOADING.key});
 	}
 
 	init (): void {
-		this.view = new LoadingSceneView(this);
+	  this.view = new LoadingSceneView(this);
 	}
 
 	preload (): void {
-		this.loadBootResources();
+	  this.loadBootResources();
 	}
 
 	create (): void {}
 
 	loadBootResources (): void {
-		this.load.once('complete', this.onCompleteLoadBoot.bind(this));
-		LoaderHelper.LoadAssets(this, LoadingAsset as CustomTypes.Asset.ObjectAsset);
-		this.load.start(); // Execute: onCompleteLoadBoot
+	  this.load.once('complete', this.onCompleteLoadBoot.bind(this));
+	  LoaderHelper.LoadAssets(this, LoadingAsset as CustomTypes.Asset.ObjectAsset);
+	  this.load.start(); // Execute: onCompleteLoadBoot
 	}
 
 	onCompleteLoadBoot (): void {
-		this.view.create();
-		this.load.on('progress', (value: number) => this.view.updateLoading(value));
-		this.loadResources();
+	  this.view.create();
+	  this.load.on('progress', (value: number) => this.view.updateLoading(value));
+	  this.loadResources();
 	}
 
 	loadResources (): void {
-		this.load.once('complete', this.onCompleteLoad.bind(this));
+	  this.load.once('complete', this.onCompleteLoad.bind(this));
 
-		// LOAD ALL GAME FILE HERE!
-		LoaderHelper.LoadAssets(this, GameplayAsset as CustomTypes.Asset.ObjectAsset);
+	  // LOAD ALL GAME FILE HERE!
+	  LoaderHelper.LoadAssets(this, GameplayAsset as CustomTypes.Asset.ObjectAsset);
 
-		this.load.start(); // Execute: onCompleteLoad
+	  this.load.start(); // Execute: onCompleteLoad
 	}
 
 	onCompleteLoad (): void {
-		this.load.removeAllListeners();
-		if (CONFIG.ON_DEBUG) this.scene.launch(SceneInfo.DEBUG.key);
-		this.scene.start(SceneInfo.GAMEPLAY.key);
+	  this.load.removeAllListeners();
+	  if (CONFIG.ON_DEBUG) this.scene.launch(SceneInfo.DEBUG.key);
+	  this.scene.start(SceneInfo.GAMEPLAY.key);
 	}
 
 }

@@ -4,22 +4,22 @@ import { LoadingSceneController } from "../scenes/loading/LoadingSceneController
 import { GameplaySceneController } from "../scenes/gameplay/GameplaySceneController";
 
 export const SceneInfo = {
-	BOOT: {
-		key: "BootScene",
-		scene: BootSceneController
-	},
-	DEBUG: {
-		key: "DebugScene",
-		scene: DebugSceneController
-	},
-	LOADING: {
-		key: "LoadingScene",
-		scene: LoadingSceneController
-	},
-	GAMEPLAY: {
-		key: "GameplayScene",
-		scene: GameplaySceneController
-	},
+  BOOT: {
+    key: "BootScene",
+    scene: BootSceneController
+  },
+  DEBUG: {
+    key: "DebugScene",
+    scene: DebugSceneController
+  },
+  LOADING: {
+    key: "LoadingScene",
+    scene: LoadingSceneController
+  },
+  GAMEPLAY: {
+    key: "GameplayScene",
+    scene: GameplaySceneController
+  },
 };
 
 export function SceneList(): Function[]

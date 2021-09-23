@@ -3,19 +3,23 @@ import { AssetType } from "../ts/info/AssetType";
 export declare namespace CustomTypes {
 
     type CONFIG = {
-        VERSION: string,
-        MODE: 'DEVELOPMENT' | 'STAGING' | 'PRODUCTION',
-        ENABLE_LOG: boolean,
-        ON_DEBUG: boolean,
-        ENABLE_PHYSICS_DEBUG: boolean,
-        BASE_ASSET_URL: string
+        VERSION: string;
+        MODE: 'SANDBOX' | 'DEVELOPMENT' | 'STAGING' | 'PRODUCTION';
+        ENABLE_LOG: boolean;
+        ON_DEBUG: boolean;
+        ENABLE_PHYSICS_DEBUG: boolean;
+        BASE_ASSET_URL: string;
     }
 
     namespace General {
 
+        type FunctionWithParams = (...args: unknown[]) => void
+
+        type FunctionNoParam = () => void
+
         type KeyValuePair<K, V> = {
-            key: K,
-            value: V
+            key: K;
+            value: V;
         }
 
     }
@@ -23,23 +27,23 @@ export declare namespace CustomTypes {
     namespace Asset {
 
         type BaseAssetInfoType = {
-            key: string,
-            type: AssetType
+            key: string;
+            type: AssetType;
         }
 
         type AssetInfoType = BaseAssetInfoType & {
-            url: string | string[],
-            width?: number,
-            height?: number,
-            config?: object
+            url: string | string[];
+            width?: number;
+            height?: number;
+            config?: object;
         }
 
         type AnimationInfoType = BaseAssetInfoType & {
-            spritesheetRef: string,
-            start: number,
-            end: number,
-            frameSpeed: number,
-            loop?: true
+            spritesheetRef: string;
+            start: number;
+            end: number;
+            frameSpeed: number;
+            loop?: true;
         }
 
         interface ObjectAsset {
@@ -52,6 +56,21 @@ export declare namespace CustomTypes {
 
     }
 
-    namespace Gameplay {}
+    namespace Gameplay {
+
+        type GameData = {
+            timer: number;
+            maxLiveBall: number;
+        }
+
+        type GeneralData = {
+            screenRatio: number;
+        }
+
+        type BallCollection = {
+            [x: string]: Phaser.Physics.Matter.Sprite;
+        }
+
+    }
 
 }
