@@ -26,7 +26,7 @@ export class LoadingSceneView implements BaseView {
 
 	  this._progressText.gameObject
 	    .setOrigin(0.5, 0)
-	    .setFontSize(48 * this.screenUtility.screenPercentage);
+	    .setFontSize(64 * this.screenUtility.screenPercentage);
 	}
 
 	updateLoading (value: number): void {

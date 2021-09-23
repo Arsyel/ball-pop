@@ -1,6 +1,7 @@
 import { LoadingSceneView } from "./LoadingSceneView";
 import { LoaderHelper } from "../../helper/LoaderHelper";
 import { Assets as LoadingAsset } from "../../collections/AssetLoading";
+import { Assets as TitleAsset } from "../../collections/AssetsTitle";
 import { Assets as GameplayAsset } from "../../collections/AssetGameplay";
 import { CustomTypes } from "../../../types/custom";
 import { SceneInfo } from "../../info/SceneInfo";
@@ -40,6 +41,7 @@ export class LoadingSceneController extends Phaser.Scene {
 	  this.load.once('complete', this.onCompleteLoad.bind(this));
 
 	  // LOAD ALL GAME FILE HERE!
+	  LoaderHelper.LoadAssets(this, TitleAsset as CustomTypes.Asset.ObjectAsset);
 	  LoaderHelper.LoadAssets(this, GameplayAsset as CustomTypes.Asset.ObjectAsset);
 
 	  this.load.start(); // Execute: onCompleteLoad
@@ -48,7 +50,7 @@ export class LoadingSceneController extends Phaser.Scene {
 	onCompleteLoad (): void {
 	  this.load.removeAllListeners();
 	  if (CONFIG.ON_DEBUG) this.scene.launch(SceneInfo.DEBUG.key);
-	  this.scene.start(SceneInfo.GAMEPLAY.key);
+	  this.scene.start(SceneInfo.TITLE.key);
 	}
 
 }

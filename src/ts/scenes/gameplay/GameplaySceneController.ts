@@ -7,6 +7,8 @@ import { GameController } from "./game/GameController";
 import { BallController } from "./ball/BallController";
 import { GameState } from "../../info/GameInfo";
 
+type OnClickRestart = CustomTypes.General.FunctionNoParam;
+type OnShowRecapModal = CustomTypes.General.FunctionNoParam;
 type OnCreateFinish = CustomTypes.General.FunctionWithParams;
 
 export class GameplaySceneController extends Phaser.Scene {
@@ -31,6 +33,10 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController.onInitialization(({ timer, maxLiveBall }) => {
       this.view.updateTimerText(timer);
       this.ballController.init({ screenRatio: this.view.screenRatio });
+    });
+
+    this.gameController.onPlayingGameState(() => {
+      this.view.setVisibleOverlay(false);
       this.ballController.enableTapBall();
     });
 
@@ -41,6 +47,8 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController.onTimeout(() => {
       this.gameController.setGameoverState();
       this.ballController.disableTapBall();
+      this.view.setVisibleOverlay(true);
+      this.view.showTimeoutText();
     });
 
     this.gameController.onComboActive((combo) => {
@@ -50,8 +58,17 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController.onNeedLiveBall(() => {
       const slightLeft = this.scale.width * 0.3;
       const slightRight = this.scale.width * 0.675;
-      const x: number = Phaser.Utils.Array.GetRandom([this.scale.width/2, slightLeft, slightRight]);
-      this.ballController.spawnBall(x, 0);
+      const x = Phaser.Utils.Array.GetRandom([this.scale.width/2, slightLeft, slightRight]);
+      const y = this.scale.height * -0.1;
+      this.ballController.spawnBall(x, y);
+    });
+
+    this.gameController.onPrepareCounter((counter) => {
+      this.view.updatePrepareCountText(counter);
+
+      const isPlayReady = (counter < 0);
+      if (!isPlayReady) return;
+      this.gameController.setPlayingState();
     });
 
     this.ballController.onDestroy((removedLiveBall) => {
@@ -69,14 +86,19 @@ export class GameplaySceneController extends Phaser.Scene {
       this.view.updateScoreText(this.gameController.totalScore);
     });
 
+    this.onShowRecapModal(() => {
+      const score = this.gameController.totalScore;
+      this.view.showRecapModal(score);
+    });
+
     this.onClickRestart(() => {
-      this.scene.start(SceneInfo.GAMEPLAY.key);
+      this.scene.start(SceneInfo.TITLE.key);
     });
 
     this.onCreateFinish((uiView) => {
       this.debugController.init();
       this.gameController.init({
-        timer: 60,
+        timer: 6,
         maxLiveBall: 40,
       });
 
@@ -95,8 +117,12 @@ export class GameplaySceneController extends Phaser.Scene {
     this.gameController.update(time, dt);
   }
 
-  onClickRestart (event: Function): void {
+  onClickRestart (event: OnClickRestart): void {
     this.view.event.on(EventNames.onClickRestart, event);
+  }
+
+  onShowRecapModal (event: OnShowRecapModal): void {
+    this.view.event.on(EventNames.onShowRecapModal, event);
   }
 
   onCreateFinish (event: OnCreateFinish): void {
