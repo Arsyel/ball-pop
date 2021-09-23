@@ -4,7 +4,6 @@ import '../src/css/index.css';
 import { CONFIG } from './ts/info/GameInfo';
 import { SceneList } from "./ts/info/SceneInfo";
 
-// eslint-disable-next-line no-console
 if (CONFIG.ENABLE_LOG) console.log("[CONFIG]", CONFIG);
 
 type CalculateScreenType = {
@@ -13,7 +12,7 @@ type CalculateScreenType = {
 	zoom: number;
 };
 
-const smallResolution = (): boolean => {
+const isSmallResolution = (): boolean => {
   return window.innerWidth < 480;
 };
 
@@ -23,7 +22,7 @@ const toEven = (val: number): number => {
 };
 
 const calculateScreen = (): CalculateScreenType => {
-  const dprModifier = (smallResolution() ? window.devicePixelRatio : 1);
+  const dprModifier = (isSmallResolution() ? window.devicePixelRatio : 1);
   return {
     width: toEven(window.innerWidth * dprModifier),
     height: toEven(window.innerHeight * dprModifier),

@@ -31,10 +31,15 @@ export const Assets = {
     url: 'img/platform/img_holder.png',
     type: AssetType.STATIC
   },
+  panel_recap: {
+    key: 'img_panel_recap',
+    url: 'img/ui/img_panel_recap.png',
+    type: AssetType.STATIC
+  },
 
   holder_json: {
     key: 'holder_json',
-    url: 'img/platform/holder.json',
+    url: 'json/holder.json',
     type: AssetType.JSON
   },
 };
