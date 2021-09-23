@@ -1,6 +1,8 @@
 import { CustomTypes } from "../../../../types/custom";
-import { MatterSprite } from "../../../modules/gameobjects/MatterSprite";
-import { BallView } from "./BallView";
+import { BallView, EvenNames } from "./BallView";
+
+type OnTapBall = (targetedDestroyBallIds: string[]) => void;
+type OnDestroy = (removedLiveBall: number) => void;
 
 export class BallController {
 
@@ -14,12 +16,34 @@ export class BallController {
     this._view.create(data);
   }
 
-  getBallCollection (id: string): MatterSprite {
-    return this._view.ballCollection[id];
-  }
-
   spawnBall (x: number, y: number): void {
     this._view.createBall(x, y);
+  }
+
+  destroy (targetedDestroyBallIds: string[]): void {
+    targetedDestroyBallIds.forEach((id) => {
+      console.assert(this._view.ballCollection[id], `Undefined id: ${id}`);
+      this._view.ballCollection[id].destroy();
+      if (Reflect.has(this._view.ballCollection, id)) {
+        Reflect.deleteProperty(this._view.ballCollection, id);
+      }
+    });
+  }
+
+  disableTapBall (): void {
+    this._view.disableTap = true;
+  }
+
+  enableTapBall (): void {
+    this._view.disableTap = false;
+  }
+
+  onTapBall (event: OnTapBall): void {
+    this._view.event.on(EvenNames.onTapBall, event);
+  }
+
+  onDestroy (event: OnDestroy): void {
+    this._view.event.on(EvenNames.onDestroy, event);
   }
 
 }

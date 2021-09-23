@@ -68,7 +68,7 @@ export declare namespace CustomTypes {
         }
 
         type BallCollection = {
-            [x: string]: MatterSprite;
+            [x: string]: Phaser.Physics.Matter.Sprite;
         }
 
     }
