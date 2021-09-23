@@ -2,6 +2,7 @@ import { DebugSceneController } from "../scenes/debug/DebugSceneController";
 import { BootSceneController } from "../scenes/boot/BootSceneController";
 import { LoadingSceneController } from "../scenes/loading/LoadingSceneController";
 import { GameplaySceneController } from "../scenes/gameplay/GameplaySceneController";
+import { TitleSceneController } from "../scenes/title/TitleSceneController";
 
 export const SceneInfo = {
   BOOT: {
@@ -15,6 +16,10 @@ export const SceneInfo = {
   LOADING: {
     key: "LoadingScene",
     scene: LoadingSceneController
+  },
+  TITLE: {
+    key: "TitleScene",
+    scene: TitleSceneController
   },
   GAMEPLAY: {
     key: "GameplayScene",
