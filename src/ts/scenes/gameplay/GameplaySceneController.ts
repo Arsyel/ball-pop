@@ -98,7 +98,7 @@ export class GameplaySceneController extends Phaser.Scene {
     this.onCreateFinish((uiView) => {
       this.debugController.init();
       this.gameController.init({
-        timer: 6,
+        timer: 90,
         maxLiveBall: 40,
       });
 
