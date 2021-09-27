@@ -1,6 +1,7 @@
 import { Assets } from "../../collections/AssetsTitle";
 import { BaseView } from "../../modules/core/BaseView";
 import { ButtonUIView } from "./ui/ButtonUIView";
+import { CharPanelUIView } from "./ui/CharPanelUIView";
 import { CustomTypes } from "../../../types/custom";
 import { FontAsset } from "../../collections/AssetFont";
 import { InfoPanelUIView } from "./ui/InfoPanelUIView";
@@ -29,13 +30,16 @@ export class TitleSceneView implements BaseView {
   private _screenState: CustomTypes.Title.ScreenState;
 
   private _infoPanelUI: InfoPanelUIView;
+  private _charPanelUI: CharPanelUIView;
+
+  private _titleContainer: Phaser.GameObjects.Container;
+  private _selectCharContainer: Phaser.GameObjects.Container;
 
   private _titleText: Phaser.GameObjects.Text;
   private _titleTween: Phaser.Tweens.Tween;
 
-  private _titleContainer: Phaser.GameObjects.Container;
-
   private _playBtn: Sprite;
+  private _playBtnLabel: Phaser.GameObjects.Text;
 
   constructor (private _scene: Phaser.Scene) {
     this.screenUtility = ScreenUtilController.getInstance();
@@ -56,7 +60,7 @@ export class TitleSceneView implements BaseView {
         if (this._screenState === "HOME_SCREEN") {
           this.event.emit(EventNames.onClickBack);
         }
-        else if (this._screenState === "INFO_SCREEN") {
+        else if ((this._screenState === "INFO_SCREEN") || (this._screenState === "PICK_CHAR_SCREEN")) {
           this.event.emit(EventNames.onChangeScreen, "HOME_SCREEN");
         }
       },
@@ -114,6 +118,17 @@ export class TitleSceneView implements BaseView {
     });
     rewardBtn.gameObject.setOrigin(1, 0);
 
+    this._titleContainer = this._scene.add.container(0, 0, [
+      this._titleText,
+      this._playBtn.gameObject,
+      this._playBtnLabel,
+      leaderboardBtn.gameObject,
+      shareBtn.gameObject,
+      rewardBtn.gameObject,
+      audioBtn.gameObject,
+      infoBtn.gameObject,
+    ]).setDepth(LAYER_DEPTH.UI);
+
     this._infoPanelUI = new InfoPanelUIView(this._scene, {
       ratio: this._screenRatio,
       text: "A. Syarat dan ketentuan Games Ball Pop\n" +
@@ -123,15 +138,11 @@ export class TitleSceneView implements BaseView {
       position: { x: this.screenUtility.centerX, y: 0 }
     });
 
-    this._titleContainer = this._scene.add.container(0, 0, [
-      this._titleText,
-      this._playBtn.gameObject,
-      leaderboardBtn.gameObject,
-      shareBtn.gameObject,
-      rewardBtn.gameObject,
-      audioBtn.gameObject,
-      infoBtn.gameObject,
-    ]).setDepth(LAYER_DEPTH.UI);
+    this._charPanelUI = new CharPanelUIView(this._scene, {
+      onClick: () => {
+        this.event.emit(EventNames.onClickPlay);
+      }
+    });
 
     this.event.emit(EventNames.onCreateFinish);
   }
@@ -158,7 +169,7 @@ export class TitleSceneView implements BaseView {
     } as Phaser.GameObjects.TextStyle;
     const title = "BALL\nPOP";
     this._titleText = this._scene.add.text(centerX, centerY, title, style);
-    this._titleText.setOrigin(0.5).setDepth(LAYER_DEPTH.UI);
+    this._titleText.setOrigin(0.5);
 
     this._titleTween = this._scene.tweens.create({
       targets: [ this._titleText ],
@@ -173,12 +184,11 @@ export class TitleSceneView implements BaseView {
 
   private createPlayBtn (): void {
     const { centerX, height } = this.screenUtility;
-    this._playBtn = new Sprite(this._scene, centerX, height * 0.8, Assets.play_btn.key);
+    this._playBtn = new Sprite(this._scene, centerX, height * 0.8, Assets.base_btn.key);
     this._playBtn.transform.setToScaleDisplaySize(this._screenRatio);
-    this._playBtn.gameObject.setDepth(LAYER_DEPTH.UI);
 
     const onClick = (): void => {
-      this.event.emit(EventNames.onClickPlay);
+      this.event.emit(EventNames.onChangeScreen, "PICK_CHAR_SCREEN");
     };
 
     const playBtnScale = this._playBtn.gameObject.scale;
@@ -196,6 +206,21 @@ export class TitleSceneView implements BaseView {
       if (playBtnTween.isPlaying()) return;
       playBtnTween.play();
     });
+
+    const playBtnConstraint = {
+      pos: this._playBtn.transform.getDisplayPositionFromCoordinate(0.5, 0.48),
+      style: {
+        wordWrap: {
+          width: this._playBtn.transform.displayWidth
+        },
+        fontFamily: FontAsset.roboto.key,
+        color: "#5d4035",
+        align: "center",
+        fontSize: `${64 * this._playBtn.transform.displayToOriginalHeightRatio}px`
+      } as Phaser.Types.GameObjects.Text.TextStyle
+    };
+    this._playBtnLabel = this._scene.add.text(playBtnConstraint.pos.x, playBtnConstraint.pos.y, "MULAI MAIN", playBtnConstraint.style);
+    this._playBtnLabel.setOrigin(0.5);
   }
 
   showScreen (state: CustomTypes.Title.ScreenState): void {
@@ -207,6 +232,11 @@ export class TitleSceneView implements BaseView {
       this._titleContainer.setVisible(true);
       this._titleTween.play();
       this._infoPanelUI.hide();
+      this._charPanelUI.hide();
+    }
+    else if (state === "PICK_CHAR_SCREEN") {
+      this._titleContainer.setVisible(false);
+      this._charPanelUI.show();
     }
     this._screenState = state;
   }
