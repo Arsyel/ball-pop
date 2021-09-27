@@ -1,9 +1,9 @@
 import { AssetType } from "../info/AssetType";
 
 export const Assets = {
-  play_btn: {
-    key: 'img_play_btn',
-    url: 'img/ui/img_play_btn.png',
+  base_btn: {
+    key: 'img_base_btn',
+    url: 'img/ui/img_base_btn.png',
     type: AssetType.STATIC
   },
   back_btn: {
@@ -44,6 +44,11 @@ export const Assets = {
   panel_info: {
     key: 'img_panel_info',
     url: 'img/ui/img_panel_info.png',
+    type: AssetType.STATIC
+  },
+  panel_select_char: {
+    key: 'img_panel_select_char',
+    url: 'img/ui/img_panel_select_char.png',
     type: AssetType.STATIC
   },
 };
