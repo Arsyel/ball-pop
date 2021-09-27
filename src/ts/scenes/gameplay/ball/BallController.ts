@@ -22,10 +22,12 @@ export class BallController {
 
   destroy (targetedDestroyBallIds: string[]): void {
     targetedDestroyBallIds.forEach((id) => {
-      console.assert(this._view.ballCollection[id], `Undefined id: ${id}`);
-      this._view.ballCollection[id].destroy();
-      if (Reflect.has(this._view.ballCollection, id)) {
-        Reflect.deleteProperty(this._view.ballCollection, id);
+      if (this._view.ballCollection.has(id)) {
+        this._view.ballCollection.get(id)!.destroy();
+        this._view.ballCollection.delete(id);
+      }
+      if (this._view.ballColliderHistory.has(id)) {
+        this._view.ballColliderHistory.delete(id);
       }
     });
   }
