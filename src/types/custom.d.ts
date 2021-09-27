@@ -67,9 +67,7 @@ export declare namespace CustomTypes {
             screenRatio: number;
         }
 
-        type BallCollection = {
-            [x: string]: Phaser.Physics.Matter.Sprite;
-        }
+        type BallCollection = Map<string, Phaser.Physics.Matter.Sprite>;
 
     }
 

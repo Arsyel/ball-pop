@@ -1,12 +1,11 @@
 import { Assets } from "../../../collections/AssetGameplay";
 import { BaseView } from "../../../modules/core/BaseView";
+import { CustomTypes } from "../../../../types/custom";
 import { MatterSprite } from "../../../modules/gameobjects/MatterSprite";
 import { ScreenUtilController } from "../../../modules/screenutility/ScreenUtilController";
 import shortUUID from "short-uuid";
-import { CustomTypes } from "../../../../types/custom";
 
 const enum PROP {
-  COLLIDE_HISTORY = "COLLIDE_HISTORY",
   CATEGORY = "CATEGORY",
   TRAVERSAL_DATA = "TRAVERSAL_DATA",
 };
@@ -16,12 +15,8 @@ export const enum EvenNames {
   onDestroy = "onDestroy",
 };
 
-type CollideHistory = {
-	[x: string]: boolean;
-}
-
 type TraversalData = {
-	similarNeighbourIds: string[];
+  similarNeighbourIds: string[];
   neighbourIds: string[],
 }
 
@@ -36,6 +31,8 @@ export class BallView implements BaseView {
 
   private _ballCollection: CustomTypes.Gameplay.BallCollection;
 
+  private _ballColliderHistory: Map<string, Set<string>>;
+
   constructor (private _scene: Phaser.Scene) {
     this.event = new Phaser.Events.EventEmitter();
     this.screenUtility = ScreenUtilController.getInstance();
@@ -45,10 +42,16 @@ export class BallView implements BaseView {
     return this._ballCollection;
   }
 
+  get ballColliderHistory (): Map<string, Set<string>> {
+    return this._ballColliderHistory;
+  }
+
   create (data: CustomTypes.Gameplay.GeneralData): void {
     this._data = data;
-    this._ballCollection = {};
+    this._ballCollection = new Map();
     this.disableTap = true;
+
+    this._ballColliderHistory = new Map();
   }
 
   createBall (x: number, y: number, bombType?: string): void {
@@ -63,13 +66,9 @@ export class BallView implements BaseView {
     const gameObject = ball.gameObject;
     gameObject.setName(`${textureKey}_${shortUUID.generate()}`);
     gameObject.setPosition(x, y);
-
     gameObject.setData(PROP.CATEGORY, textureKey);
-    gameObject.setData(PROP.COLLIDE_HISTORY, {} as CollideHistory);
-    gameObject.setData(PROP.TRAVERSAL_DATA, {
-      similarNeighbourIds: [],
-      neighbourIds: [],
-    } as TraversalData);
+
+    this.setData(gameObject);
 
     const density = 0.001;
     const radiusModifier = isBombType ? 2 : 1.8;
@@ -87,11 +86,17 @@ export class BallView implements BaseView {
     this.setBallOnCollection(gameObject);
   }
 
+  private setData (gameObject: Phaser.GameObjects.GameObject): void {
+    this._ballColliderHistory.set(gameObject.name, new Set());
+
+    gameObject.setData(PROP.TRAVERSAL_DATA, {
+      similarNeighbourIds: [],
+      neighbourIds: [],
+    } as TraversalData);
+  }
+
   private setBallOnCollection (sprite: Phaser.Physics.Matter.Sprite): void {
-    this._ballCollection = {
-      ...this._ballCollection,
-      [sprite.name]: sprite
-    };
+    this._ballCollection.set(sprite.name, sprite);
   }
 
   private registerOnClickAction (gameObject: Phaser.GameObjects.GameObject, bombType?: string): void {
@@ -111,8 +116,7 @@ export class BallView implements BaseView {
       }
 
       // Normal condition
-      const excludeList = [ gameObject.name ];
-      const selectedIdsToDestroy = this.traverseBallNeighbours(gameObject, excludeList);
+      const selectedIdsToDestroy = this.traversalDFS(gameObject.name);
 
       const lessThanThreeMatch = selectedIdsToDestroy.length < 3;
       if (lessThanThreeMatch) return;
@@ -121,8 +125,8 @@ export class BallView implements BaseView {
       const ballId = selectedIdsToDestroy[0];
       if (isChainedBall) {
         const targetBallPos = {
-          x: this.ballCollection[ballId].x,
-          y: this.ballCollection[ballId].y,
+          x: this.ballCollection.get(ballId)!.x,
+          y: this.ballCollection.get(ballId)!.y,
         };
 
         this.createBall(targetBallPos.x, targetBallPos.y, Assets.ball_bomb_a.key);
@@ -134,78 +138,77 @@ export class BallView implements BaseView {
     });
   }
 
+  private onCollideCallback (currentId: string, data: Phaser.Types.Physics.Matter.MatterCollisionData, isCollide: boolean): void {
+    if (currentId !== data.bodyA.gameObject?.name) return;
+
+    const goA = data.bodyA.gameObject;
+    const goB = data.bodyB.gameObject;
+
+    const hasId = goA?.name && goB?.name;
+    if (!hasId) return;
+
+    const ballAHistory = this._ballColliderHistory.get(goA.name)!;
+    (isCollide)
+      ? ballAHistory.add(goB.name)
+      : ballAHistory.delete(goB.name);
+
+    goA.setData(PROP.TRAVERSAL_DATA, {
+      similarNeighbourIds: this.getSimilarNeighbourIds(goA),
+      neighbourIds: this.getNeighbourIds(goA),
+    } as TraversalData);
+
+    const ballBHistory = this._ballColliderHistory.get(goB.name)!;
+    (isCollide)
+      ? ballBHistory.add(goA.name)
+      : ballBHistory.delete(goA.name);
+
+    goB.setData(PROP.TRAVERSAL_DATA, {
+      similarNeighbourIds: this.getSimilarNeighbourIds(goB),
+      neighbourIds: this.getNeighbourIds(goB),
+    } as TraversalData);
+  };
+
   private registerColliderEvent (sprite: Phaser.Physics.Matter.Sprite): void {
-    const onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData, isCollide: boolean): void => {
-      if (sprite.name !== data.bodyA.gameObject?.name) return;
-
-      const goA = data.bodyA.gameObject;
-      const goB = data.bodyB.gameObject;
-
-      const hasName = goA?.name && goB?.name;
-      if (!hasName) return;
-
-      const currCollideHistoryA: object = goA.getData(PROP.COLLIDE_HISTORY);
-      const newHistoryA = {
-        ...currCollideHistoryA,
-        [goB.name]: isCollide,
-      };
-      goA.setData(PROP.COLLIDE_HISTORY, newHistoryA);
-      goA.setData(PROP.TRAVERSAL_DATA, {
-        similarNeighbourIds: this.getSimilarNeighbourIds(goA),
-        neighbourIds: this.getNeighbourIds(goA),
-      } as TraversalData);
-
-      const currCollideHistoryB: object = goB.getData(PROP.COLLIDE_HISTORY);
-      const newHistoryB = {
-        ...currCollideHistoryB,
-        [goA.name]: isCollide,
-      };
-      goB.setData(PROP.COLLIDE_HISTORY, newHistoryB);
-      goB.setData(PROP.TRAVERSAL_DATA, {
-        similarNeighbourIds: this.getSimilarNeighbourIds(goB),
-        neighbourIds: this.getNeighbourIds(goB),
-      } as TraversalData);
-    };
-
-    sprite.setOnCollide((data: Phaser.Types.Physics.Matter.MatterCollisionData) => onCollideCallback(data, true));
-    sprite.setOnCollideActive((data: Phaser.Types.Physics.Matter.MatterCollisionData) => onCollideCallback(data, true));
-    sprite.setOnCollideEnd((data: Phaser.Types.Physics.Matter.MatterCollisionData) => onCollideCallback(data, false));
+    sprite.setOnCollide((data: Phaser.Types.Physics.Matter.MatterCollisionData) => this.onCollideCallback(sprite.name, data, true));
+    sprite.setOnCollideActive((data: Phaser.Types.Physics.Matter.MatterCollisionData) => this.onCollideCallback(sprite.name, data, true));
+    sprite.setOnCollideEnd((data: Phaser.Types.Physics.Matter.MatterCollisionData) => this.onCollideCallback(sprite.name, data, false));
   }
 
   private getSimilarNeighbourIds (gameObject: Phaser.GameObjects.GameObject): string[] {
-    const history: CollideHistory = gameObject.getData(PROP.COLLIDE_HISTORY);
-    const sameCategoryIds = Object.keys(history)
-      .filter((ballId) => this._ballCollection[ballId] && (this._ballCollection[ballId].getData(PROP.CATEGORY) === gameObject.getData(PROP.CATEGORY)));
-    return sameCategoryIds.filter((id) => history[id]);
+    const history = this._ballColliderHistory.get(gameObject.name)!;
+    const sameCategoryIds: string[] = [];
+    for (const ballId of history) {
+      if (this._ballCollection.has(ballId) && (this._ballCollection.get(ballId)!.getData(PROP.CATEGORY) === gameObject.getData(PROP.CATEGORY))) {
+        sameCategoryIds.push(ballId);
+      }
+    }
+    return sameCategoryIds;
   }
 
   private getNeighbourIds (gameObject: Phaser.GameObjects.GameObject): string[] {
-    const history: CollideHistory = gameObject.getData(PROP.COLLIDE_HISTORY);
-    const touchedBallAreaIds = Object.keys(history).filter((id) => history[id] && this._ballCollection[id]);
-    touchedBallAreaIds.unshift(gameObject.name);
+    const history = this._ballColliderHistory.get(gameObject.name)!;
+    const touchedBallAreaIds: string[] = [ gameObject.name ];
+    for (const ballId of history) {
+      if (this._ballCollection.has(ballId)) {
+        touchedBallAreaIds.push(ballId);
+      }
+    }
     return touchedBallAreaIds;
   }
 
-  private traverseBallNeighbours (gameObject: Phaser.GameObjects.GameObject, exclude: string[]): string[] {
-    const { similarNeighbourIds } = gameObject.getData(PROP.TRAVERSAL_DATA) as TraversalData;
+  private traversalDFS (ballId: string, visited = new Set(), ballIds: string[] = []): string[] {
+    ballIds.push(ballId);
+    visited.add(ballId);
 
-    if (!similarNeighbourIds || similarNeighbourIds.length <= 0) {
-      return [ gameObject.name ];
+    const { similarNeighbourIds } = this._ballCollection.get(ballId)!.getData(PROP.TRAVERSAL_DATA) as TraversalData;
+    for (let index = 0; index < similarNeighbourIds.length; index++) {
+      const targetId = similarNeighbourIds[index];
+      if (visited.has(targetId)) continue;
+
+      this.traversalDFS(targetId, visited, ballIds);
     }
-    else {
-      const data = [ gameObject.name ];
-      for (let index = 0; index < similarNeighbourIds.length; index++) {
-        const id = similarNeighbourIds[index];
-        const targetSprite = this._ballCollection[id];
 
-        if (exclude.includes(targetSprite.name)) continue;
-        exclude.push(id);
-
-        data.push(...this.traverseBallNeighbours(targetSprite, exclude));
-      }
-
-      return data;
-    }
+    return ballIds;
   }
 
 }
