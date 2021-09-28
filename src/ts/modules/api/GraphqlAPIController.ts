@@ -1,25 +1,22 @@
 import { BaseAPIInstance, EventNames, OnError, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
-import { gql, request } from "graphql-request";
+import { addBookMutation, getBooksQuery } from "./queries/Query";
 
 import { GetObjectProp } from "../../helper/GeneralHelper";
+import { GraphQLClient } from "graphql-request";
 import { getRoute } from "./helper/Helper";
 
 export class GraphqlAPIController extends BaseAPIInstance {
 
+  private _client: GraphQLClient;
+
+  constructor () {
+    super();
+    this._client = new GraphQLClient(getRoute("/graphql"));
+    this._client.setHeader("authorization", "Bearer TOKEN_HERE");
+  }
+
   getTestAPICall (): void {
-    const getBooksQuery = gql`
-      query GetBooks {
-        books {
-          id
-          name
-          author {
-            name
-            id
-          }
-        }
-      }
-    `;
-    request(getRoute("/graphql"), getBooksQuery)
+    this._client.request(getBooksQuery)
       .then((data) => {
         this.event.emit(EventNames.onGetTestAPICall, GetObjectProp(data, "books"));
       })
@@ -29,20 +26,12 @@ export class GraphqlAPIController extends BaseAPIInstance {
   }
 
   postTestAPICall (): void {
-    const addBookMutation = gql`
-      mutation ($name: String!, $genre: String!, $authorId: ID!) {
-        addBook (name: $name, genre: $genre, authorId: $authorId) {
-          id
-          name
-        }
-      }
-    `;
     const variables = {
       name: "Random Name: " + new Date(),
       genre: "Any",
       authorId: "6105e20dda268330bc94b115" // Platos
     };
-    request(getRoute("/graphql"), addBookMutation, variables)
+    this._client.request(addBookMutation, variables)
       .then((data) => {
         this.event.emit(EventNames.onGetTestAPICall, data);
       })
