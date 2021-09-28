@@ -11,3 +11,7 @@ export function ShuffleArray (array: []): [] {
 export const LAYER_DEPTH = {
   UI: 100,
 };
+
+export function GetObjectProp (obj: object, prop: string): unknown {
+  return Reflect.get(obj ?? {}, prop);
+}
