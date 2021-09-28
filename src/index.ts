@@ -1,6 +1,7 @@
 /// <reference path="../node_modules/phaser/types/phaser.d.ts" />
 
 import '../src/css/index.css';
+
 import { CONFIG } from './ts/info/GameInfo';
 import { SceneList } from "./ts/info/SceneInfo";
 
@@ -75,7 +76,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     matter: {
       debug: (CONFIG.MODE === "SANDBOX"),
       correction: 2,
-      positionIterations: 7,
+      positionIterations: 8,
     },
   },
   input: { activePointers: 2 },
