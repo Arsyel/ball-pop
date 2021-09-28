@@ -51,6 +51,7 @@ export class GameplaySceneController extends Phaser.Scene {
 
     this.gameController.onComboActive((combo) => {
       this.view.updateComboText(combo);
+      this.view.showComboText();
     });
 
     this.gameController.onNeedLiveBall(() => {

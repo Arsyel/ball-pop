@@ -1,9 +1,9 @@
-import { FontAsset } from "../../collections/AssetFont";
 import { Assets } from "../../collections/AssetGameplay";
-import { LAYER_DEPTH } from "../../helper/GeneralHelper";
 import { BaseView } from "../../modules/core/BaseView";
-import { Image } from "../../modules/gameobjects/Image";
 import { Button } from "../../modules/gameobjects/Button";
+import { FontAsset } from "../../collections/AssetFont";
+import { Image } from "../../modules/gameobjects/Image";
+import { LAYER_DEPTH } from "../../helper/GeneralHelper";
 import { MatterSprite } from "../../modules/gameobjects/MatterSprite";
 import { Rectangle } from "../../modules/gameobjects/Rectangle";
 import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
@@ -30,7 +30,10 @@ export class GameplaySceneView implements BaseView {
 
   private _timerText: Phaser.GameObjects.Text;
   private _scoreText: Phaser.GameObjects.Text;
+
+  private _comboTitleText: Phaser.GameObjects.Text;
   private _comboText: Phaser.GameObjects.Text;
+  private _comboTextTween: Phaser.Tweens.Tween;
 
   private _timeoutText: Phaser.GameObjects.Text;
 
@@ -39,7 +42,6 @@ export class GameplaySceneView implements BaseView {
 
   private _modal: Phaser.GameObjects.Container;
   private _totalScoreText: Phaser.GameObjects.Text;
-  // private _homebtn: Button;
 
   private _ballHolder: MatterSprite;
 
@@ -102,11 +104,37 @@ export class GameplaySceneView implements BaseView {
       .setOrigin(0.5, 0)
       .setDepth(LAYER_DEPTH.UI);
 
-    this._comboText = this._scene.add.text(centerX, this._timerText.getBottomCenter().y * 1.15, "+0", textStyle);
-    this._comboText
-      .setFontSize(100 * this._screenRatio)
+    this._comboTitleText = this._scene.add.text(centerX, this._timerText.getBottomCenter().y * 1.285, "COMBO!", textStyle);
+    this._comboTitleText
+      .setFontSize(80 * this._screenRatio)
       .setOrigin(0.5, 0)
       .setDepth(LAYER_DEPTH.UI);
+    this._comboTitleText.setVisible(false);
+
+    this._comboText = this._scene.add.text(centerX, this._comboTitleText.getBottomCenter().y * 1.015, "+0", textStyle);
+    this._comboText
+      .setFontSize(120 * this._screenRatio)
+      .setOrigin(0.5, 0)
+      .setDepth(LAYER_DEPTH.UI);
+    this._comboText.setVisible(false);
+
+    const comboTextScale = this._comboText.scale;
+    this._comboTextTween = this._scene.tweens.create({
+      targets: this._comboText,
+      onActive: () => {
+        this._comboText.setVisible(true).setActive(true);
+        this._comboTitleText.setVisible(true).setActive(true);
+      },
+      props: {
+        scale: { getStart: () => comboTextScale * 1.75, getEnd: () => comboTextScale },
+      },
+      duration: 150,
+      completeDelay: 750,
+      onComplete: () => {
+        this._comboText.setVisible(false).setActive(false);
+        this._comboTitleText.setVisible(false).setActive(false);
+      }
+    });
   }
 
   private createBackground (): void {
@@ -258,6 +286,10 @@ export class GameplaySceneView implements BaseView {
   showRecapModal (score: number): void {
     this._modal.setVisible(true);
     this._totalScoreText.setText(score.toString());
+  }
+
+  showComboText (): void {
+    this._comboTextTween.play();
   }
 
   updateTimerText (value: number): void {
