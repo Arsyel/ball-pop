@@ -7,7 +7,6 @@ export class APIController {
 
   private static _instance: APIController;
 
-  private _token: string;
   private _api: BaseAPIInstance;
 
   constructor () {

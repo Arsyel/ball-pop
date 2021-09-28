@@ -25,6 +25,15 @@ export declare namespace CustomTypes {
 
     }
 
+    namespace Network {
+
+        type ErrorData = {
+            origin: string;
+            err: any;
+        };
+
+    }
+
     namespace Asset {
 
         type BaseAssetInfoType = {

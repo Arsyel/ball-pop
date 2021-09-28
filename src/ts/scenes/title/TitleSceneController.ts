@@ -28,6 +28,11 @@ export class TitleSceneController extends Phaser.Scene {
     this.debugController = new DebugController(this);
     this.apiController = APIController.getInstance().getApi();
 
+    this.apiController.onError((errData) => {
+      console.log("Err origin", errData.origin);
+      console.log("All error", errData.err);
+    });
+
     this.apiController.onGetTestAPICall((data: unknown) => {
       console.log("Data:", data);
     });

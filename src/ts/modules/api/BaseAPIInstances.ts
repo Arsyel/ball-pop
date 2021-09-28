@@ -1,6 +1,6 @@
 import { CustomTypes } from "../../../types/custom";
 
-export type OnError = CustomTypes.General.FunctionWithParams;
+export type OnError = (errData: CustomTypes.Network.ErrorData) => void;
 export type OnGetTestAPICall = CustomTypes.General.FunctionWithParams;
 export type OnGetProfile = CustomTypes.General.FunctionWithParams;
 
