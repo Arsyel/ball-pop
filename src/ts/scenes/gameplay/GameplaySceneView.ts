@@ -4,7 +4,6 @@ import { Button } from "../../modules/gameobjects/Button";
 import { FontAsset } from "../../collections/AssetFont";
 import { Image } from "../../modules/gameobjects/Image";
 import { LAYER_DEPTH } from "../../helper/GeneralHelper";
-import { MatterSprite } from "../../modules/gameobjects/MatterSprite";
 import { Rectangle } from "../../modules/gameobjects/Rectangle";
 import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
 
@@ -14,7 +13,6 @@ export const enum EventNames {
   onCreateFinish = "onCreateFinish",
 };
 
-const BASE_GRAVITY = 0.0058;
 
 export class GameplaySceneView implements BaseView {
 
@@ -43,8 +41,6 @@ export class GameplaySceneView implements BaseView {
   private _modal: Phaser.GameObjects.Container;
   private _totalScoreText: Phaser.GameObjects.Text;
 
-  private _ballHolder: MatterSprite;
-
   constructor (private _scene: Phaser.Scene) {
     this.screenUtility = ScreenUtilController.getInstance();
     this.event = new Phaser.Events.EventEmitter();
@@ -67,13 +63,6 @@ export class GameplaySceneView implements BaseView {
     this.createPrepareCounterText();
     this.createTimeoutText();
     this.createRecapModal();
-
-    // TODO: Belong to physic world controller
-    this.createBallHolder();
-    this.createLineWall();
-
-    const matterWorld = this._scene.matter.world;
-    matterWorld.setGravity(0, 1, BASE_GRAVITY * this._screenRatio);
 
     this.event.emit(EventNames.onCreateFinish);
   }
@@ -229,32 +218,6 @@ export class GameplaySceneView implements BaseView {
 
     this._modal = this._scene.add.container(0, 0, [ panel.gameObject, this._totalScoreText, homebtn.gameObject.container ]);
     this._modal.setVisible(false).setDepth(LAYER_DEPTH.UI);
-  }
-
-  private createBallHolder (): void {
-    const { centerX, height } = this.screenUtility;
-    const shapeConfig = {
-      shape : Reflect.get(this._scene.cache.json.get(Assets.holder_json.key), "holder"),
-    } as Phaser.Types.Physics.Matter.MatterBodyConfig;
-    this._ballHolder = new MatterSprite(this._scene, 0, 0, Assets.holder.key, 0, shapeConfig);
-    this._ballHolder.transform.setToScaleDisplaySize(this._screenRatio);
-    this._scene.matter.alignBody(this._ballHolder.gameObject, centerX, height, Phaser.Display.Align.BOTTOM_CENTER);
-  }
-
-  private createLineWall (): void {
-    const { height } = this.screenUtility;
-
-    const addDegToRad = (deg: number): number => {
-      return deg * (Math.PI / 180);
-    };
-
-    const leftWallPos = this._ballHolder.transform.getDisplayPositionFromCoordinate(0.25, 0);
-    const leftWall = this._scene.matter.add.rectangle(0, 0, (64 * this._screenRatio), height / 3, { isStatic: true, angle: addDegToRad(-15) });
-    this._scene.matter.alignBody(leftWall, leftWallPos.x, leftWallPos.y, Phaser.Display.Align.BOTTOM_RIGHT);
-
-    const rightWallPos = this._ballHolder.transform.getDisplayPositionFromCoordinate(0.925, 0);
-    const rightWall = this._scene.matter.add.rectangle(0, 0, (64 * this._screenRatio), height / 3, { isStatic: true, angle: addDegToRad(15) });
-    this._scene.matter.alignBody(rightWall, rightWallPos.x, rightWallPos.y, Phaser.Display.Align.BOTTOM_RIGHT);
   }
 
   setVisibleOverlay (visible: boolean): void {

@@ -80,9 +80,9 @@ export class BallView implements BaseView {
     });
     gameObject.setAngularVelocity(0.015);
 
-    // TODO: Move this to controler!
     this.registerColliderEvent(gameObject);
     this.registerOnClickAction(gameObject, bombType);
+
     this.setBallOnCollection(gameObject);
   }
 
@@ -129,7 +129,8 @@ export class BallView implements BaseView {
           y: this.ballCollection.get(ballId)!.y,
         };
 
-        this.createBall(targetBallPos.x, targetBallPos.y, Assets.ball_bomb_a.key);
+        const bombType = Assets.ball_bomb_a.key;
+        this.createBall(targetBallPos.x, targetBallPos.y, bombType);
       }
 
       dispatchOnTapBall(selectedIdsToDestroy);

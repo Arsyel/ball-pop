@@ -6,6 +6,7 @@ import { CustomTypes } from "../../../types/custom";
 import { GameController } from "./game/GameController";
 import { GameState } from "../../info/GameInfo";
 import { SceneInfo } from "../../info/SceneInfo";
+import { WorldPhysicControler } from "./world/WorldPhysicController";
 
 type OnClickRestart = CustomTypes.General.FunctionNoParam;
 type OnShowRecapModal = CustomTypes.General.FunctionNoParam;
@@ -15,6 +16,7 @@ export class GameplaySceneController extends Phaser.Scene {
 
 	view: GameplaySceneView;
 	audioController: AudioController;
+  worldPhysicController: WorldPhysicControler;
   gameController: GameController;
   ballController: BallController;
 
@@ -25,10 +27,11 @@ export class GameplaySceneController extends Phaser.Scene {
   init (): void {
     this.view = new GameplaySceneView(this);
     this.audioController = AudioController.getInstance();
+    this.worldPhysicController = new WorldPhysicControler(this);
     this.gameController = new GameController();
     this.ballController = new BallController(this);
 
-    this.gameController.onInitialization(({ timer, maxLiveBall }) => {
+    this.gameController.onInitialization(({ timer }) => {
       this.view.updateTimerText(timer);
       this.ballController.init({ screenRatio: this.view.screenRatio });
     });
@@ -95,6 +98,7 @@ export class GameplaySceneController extends Phaser.Scene {
     });
 
     this.onCreateFinish((uiView) => {
+      this.worldPhysicController.init({ screenRatio: this.view.screenRatio });
       this.gameController.init({
         timer: 90,
         maxLiveBall: 40,
