@@ -1,6 +1,7 @@
 import { EventNames, TitleSceneView } from "./TitleSceneView";
 
 import { CustomTypes } from "../../../types/custom";
+import { DebugController } from "../gameplay/debug/DebugController";
 import { SceneInfo } from "../../info/SceneInfo";
 
 type OnCreateFinish = CustomTypes.General.FunctionWithParams;
@@ -13,6 +14,7 @@ type OnChangeScreen = (screenState: CustomTypes.Title.ScreenState) => void;
 export class TitleSceneController extends Phaser.Scene {
 
   view: TitleSceneView;
+  debugController: DebugController;
 
   constructor () {
     super({key: SceneInfo.TITLE.key});
@@ -20,6 +22,7 @@ export class TitleSceneController extends Phaser.Scene {
 
   init (): void {
     this.view = new TitleSceneView(this);
+    this.debugController = new DebugController(this);
 
     this.onClickPlay(() => {
       this.scene.start(SceneInfo.GAMEPLAY.key);
@@ -29,7 +32,9 @@ export class TitleSceneController extends Phaser.Scene {
       console.log("Exit confirm?");
     });
 
-    this.onClickAudio((isAudioOn: boolean) => {});
+    this.onClickAudio((isAudioOn: boolean) => {
+      console.log({ isAudioOn });
+    });
 
     this.onClickShare(() => {});
 
@@ -37,7 +42,10 @@ export class TitleSceneController extends Phaser.Scene {
       this.view.showScreen(screenState);
     });
 
-    this.onCreateFinish(() => {});
+    this.onCreateFinish(() => {
+      this.debugController.init();
+      this.debugController.show(true);
+    });
   }
 
   create (): void {
