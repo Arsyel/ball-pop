@@ -1,5 +1,7 @@
 import { EventNames, TitleSceneView } from "./TitleSceneView";
 
+import { APIController } from "../../modules/api/APIController";
+import { BaseAPIInstance } from "../../modules/api/BaseAPIInstances";
 import { CustomTypes } from "../../../types/custom";
 import { DebugController } from "../gameplay/debug/DebugController";
 import { SceneInfo } from "../../info/SceneInfo";
@@ -15,6 +17,7 @@ export class TitleSceneController extends Phaser.Scene {
 
   view: TitleSceneView;
   debugController: DebugController;
+  apiController: BaseAPIInstance;
 
   constructor () {
     super({key: SceneInfo.TITLE.key});
@@ -23,6 +26,11 @@ export class TitleSceneController extends Phaser.Scene {
   init (): void {
     this.view = new TitleSceneView(this);
     this.debugController = new DebugController(this);
+    this.apiController = APIController.getInstance().getApi();
+
+    this.apiController.onGetTestAPICall((data: unknown) => {
+      console.log("Data:", data);
+    });
 
     this.onClickPlay(() => {
       this.scene.start(SceneInfo.GAMEPLAY.key);
@@ -36,7 +44,10 @@ export class TitleSceneController extends Phaser.Scene {
       console.log({ isAudioOn });
     });
 
-    this.onClickShare(() => {});
+    this.onClickShare(() => {
+      // FIXME Test api
+      this.apiController.postTestAPICall();
+    });
 
     this.onChangeScreen((screenState) => {
       this.view.showScreen(screenState);
@@ -45,6 +56,7 @@ export class TitleSceneController extends Phaser.Scene {
     this.onCreateFinish(() => {
       this.debugController.init();
       this.debugController.show(true);
+      this.apiController.getTestAPICall();
     });
   }
 
