@@ -9,6 +9,7 @@ export declare namespace CustomTypes {
         ON_DEBUG: boolean;
         ENABLE_PHYSICS_DEBUG: boolean;
         BASE_ASSET_URL: string;
+        BASE_API_URL: string;
     }
 
     namespace General {

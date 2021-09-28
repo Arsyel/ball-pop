@@ -13,7 +13,7 @@ export class APIController {
   constructor () {
     this._api = (CONFIG.MODE === "SANDBOX") ? new DummyAPIController() : new GraphqlAPIController();
   }
-  
+
   static getInstance (): APIController {
     if (!APIController._instance) {
       APIController._instance = new APIController();
