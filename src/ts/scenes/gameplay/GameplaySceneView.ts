@@ -1,10 +1,9 @@
-import { FontAsset } from "../../collections/AssetFont";
 import { Assets } from "../../collections/AssetGameplay";
-import { LAYER_DEPTH } from "../../helper/GeneralHelper";
 import { BaseView } from "../../modules/core/BaseView";
-import { Image } from "../../modules/gameobjects/Image";
 import { Button } from "../../modules/gameobjects/Button";
-import { MatterSprite } from "../../modules/gameobjects/MatterSprite";
+import { FontAsset } from "../../collections/AssetFont";
+import { Image } from "../../modules/gameobjects/Image";
+import { LAYER_DEPTH } from "../../helper/GeneralHelper";
 import { Rectangle } from "../../modules/gameobjects/Rectangle";
 import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
 
@@ -14,7 +13,6 @@ export const enum EventNames {
   onCreateFinish = "onCreateFinish",
 };
 
-const BASE_GRAVITY = 0.0058;
 
 export class GameplaySceneView implements BaseView {
 
@@ -30,7 +28,10 @@ export class GameplaySceneView implements BaseView {
 
   private _timerText: Phaser.GameObjects.Text;
   private _scoreText: Phaser.GameObjects.Text;
+
+  private _comboTitleText: Phaser.GameObjects.Text;
   private _comboText: Phaser.GameObjects.Text;
+  private _comboTextTween: Phaser.Tweens.Tween;
 
   private _timeoutText: Phaser.GameObjects.Text;
 
@@ -39,9 +40,6 @@ export class GameplaySceneView implements BaseView {
 
   private _modal: Phaser.GameObjects.Container;
   private _totalScoreText: Phaser.GameObjects.Text;
-  // private _homebtn: Button;
-
-  private _ballHolder: MatterSprite;
 
   constructor (private _scene: Phaser.Scene) {
     this.screenUtility = ScreenUtilController.getInstance();
@@ -65,13 +63,6 @@ export class GameplaySceneView implements BaseView {
     this.createPrepareCounterText();
     this.createTimeoutText();
     this.createRecapModal();
-
-    // TODO: Belong to physic world controller
-    this.createBallHolder();
-    this.createLineWall();
-
-    const matterWorld = this._scene.matter.world;
-    matterWorld.setGravity(0, 1, BASE_GRAVITY * this._screenRatio);
 
     this.event.emit(EventNames.onCreateFinish);
   }
@@ -102,11 +93,37 @@ export class GameplaySceneView implements BaseView {
       .setOrigin(0.5, 0)
       .setDepth(LAYER_DEPTH.UI);
 
-    this._comboText = this._scene.add.text(centerX, this._timerText.getBottomCenter().y * 1.15, "+0", textStyle);
-    this._comboText
-      .setFontSize(100 * this._screenRatio)
+    this._comboTitleText = this._scene.add.text(centerX, this._timerText.getBottomCenter().y * 1.285, "COMBO!", textStyle);
+    this._comboTitleText
+      .setFontSize(80 * this._screenRatio)
       .setOrigin(0.5, 0)
       .setDepth(LAYER_DEPTH.UI);
+    this._comboTitleText.setVisible(false);
+
+    this._comboText = this._scene.add.text(centerX, this._comboTitleText.getBottomCenter().y * 1.015, "+0", textStyle);
+    this._comboText
+      .setFontSize(120 * this._screenRatio)
+      .setOrigin(0.5, 0)
+      .setDepth(LAYER_DEPTH.UI);
+    this._comboText.setVisible(false);
+
+    const comboTextScale = this._comboText.scale;
+    this._comboTextTween = this._scene.tweens.create({
+      targets: this._comboText,
+      onActive: () => {
+        this._comboText.setVisible(true).setActive(true);
+        this._comboTitleText.setVisible(true).setActive(true);
+      },
+      props: {
+        scale: { getStart: () => comboTextScale * 1.75, getEnd: () => comboTextScale },
+      },
+      duration: 150,
+      completeDelay: 750,
+      onComplete: () => {
+        this._comboText.setVisible(false).setActive(false);
+        this._comboTitleText.setVisible(false).setActive(false);
+      }
+    });
   }
 
   private createBackground (): void {
@@ -203,32 +220,6 @@ export class GameplaySceneView implements BaseView {
     this._modal.setVisible(false).setDepth(LAYER_DEPTH.UI);
   }
 
-  private createBallHolder (): void {
-    const { centerX, height } = this.screenUtility;
-    const shapeConfig = {
-      shape : Reflect.get(this._scene.cache.json.get(Assets.holder_json.key), "holder"),
-    } as Phaser.Types.Physics.Matter.MatterBodyConfig;
-    this._ballHolder = new MatterSprite(this._scene, 0, 0, Assets.holder.key, 0, shapeConfig);
-    this._ballHolder.transform.setToScaleDisplaySize(this._screenRatio);
-    this._scene.matter.alignBody(this._ballHolder.gameObject, centerX, height, Phaser.Display.Align.BOTTOM_CENTER);
-  }
-
-  private createLineWall (): void {
-    const { height } = this.screenUtility;
-
-    const addDegToRad = (deg: number): number => {
-      return deg * (Math.PI / 180);
-    };
-
-    const leftWallPos = this._ballHolder.transform.getDisplayPositionFromCoordinate(0.25, 0);
-    const leftWall = this._scene.matter.add.rectangle(0, 0, (64 * this._screenRatio), height / 3, { isStatic: true, angle: addDegToRad(-15) });
-    this._scene.matter.alignBody(leftWall, leftWallPos.x, leftWallPos.y, Phaser.Display.Align.BOTTOM_RIGHT);
-
-    const rightWallPos = this._ballHolder.transform.getDisplayPositionFromCoordinate(0.925, 0);
-    const rightWall = this._scene.matter.add.rectangle(0, 0, (64 * this._screenRatio), height / 3, { isStatic: true, angle: addDegToRad(15) });
-    this._scene.matter.alignBody(rightWall, rightWallPos.x, rightWallPos.y, Phaser.Display.Align.BOTTOM_RIGHT);
-  }
-
   setVisibleOverlay (visible: boolean): void {
     this._screenOverlay.gameObject.setVisible(visible).setActive(visible);
     (visible) ? this._screenOverlay.gameObject.setInteractive() : this._screenOverlay.gameObject.disableInteractive();
@@ -258,6 +249,10 @@ export class GameplaySceneView implements BaseView {
   showRecapModal (score: number): void {
     this._modal.setVisible(true);
     this._totalScoreText.setText(score.toString());
+  }
+
+  showComboText (): void {
+    this._comboTextTween.play();
   }
 
   updateTimerText (value: number): void {

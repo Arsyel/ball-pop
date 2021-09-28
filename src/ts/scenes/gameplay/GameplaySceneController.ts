@@ -1,11 +1,12 @@
-import { AudioController } from "../../modules/audio/AudioController";
 import { EventNames, GameplaySceneView } from "./GameplaySceneView";
-import { DebugController } from "./debug/DebugController";
-import { SceneInfo } from "../../info/SceneInfo";
+
+import { AudioController } from "../../modules/audio/AudioController";
+import { BallController } from "./ball/BallController";
 import { CustomTypes } from "../../../types/custom";
 import { GameController } from "./game/GameController";
-import { BallController } from "./ball/BallController";
 import { GameState } from "../../info/GameInfo";
+import { SceneInfo } from "../../info/SceneInfo";
+import { WorldPhysicControler } from "./world/WorldPhysicController";
 
 type OnClickRestart = CustomTypes.General.FunctionNoParam;
 type OnShowRecapModal = CustomTypes.General.FunctionNoParam;
@@ -15,7 +16,7 @@ export class GameplaySceneController extends Phaser.Scene {
 
 	view: GameplaySceneView;
 	audioController: AudioController;
-	debugController: DebugController;
+  worldPhysicController: WorldPhysicControler;
   gameController: GameController;
   ballController: BallController;
 
@@ -26,11 +27,11 @@ export class GameplaySceneController extends Phaser.Scene {
   init (): void {
     this.view = new GameplaySceneView(this);
     this.audioController = AudioController.getInstance();
-    this.debugController = new DebugController(this);
+    this.worldPhysicController = new WorldPhysicControler(this);
     this.gameController = new GameController();
     this.ballController = new BallController(this);
 
-    this.gameController.onInitialization(({ timer, maxLiveBall }) => {
+    this.gameController.onInitialization(({ timer }) => {
       this.view.updateTimerText(timer);
       this.ballController.init({ screenRatio: this.view.screenRatio });
     });
@@ -53,6 +54,7 @@ export class GameplaySceneController extends Phaser.Scene {
 
     this.gameController.onComboActive((combo) => {
       this.view.updateComboText(combo);
+      this.view.showComboText();
     });
 
     this.gameController.onNeedLiveBall(() => {
@@ -96,13 +98,11 @@ export class GameplaySceneController extends Phaser.Scene {
     });
 
     this.onCreateFinish((uiView) => {
-      this.debugController.init();
+      this.worldPhysicController.init({ screenRatio: this.view.screenRatio });
       this.gameController.init({
         timer: 90,
         maxLiveBall: 40,
       });
-
-      this.debugController.show(true);
     });
   }
 

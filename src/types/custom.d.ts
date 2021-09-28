@@ -71,4 +71,10 @@ export declare namespace CustomTypes {
 
     }
 
+    namespace Title {
+
+        type ScreenState = "HOME_SCREEN" | "INFO_SCREEN" | "PICK_CHAR_SCREEN";
+
+    }
+
 }

@@ -56,7 +56,7 @@ export class BallView implements BaseView {
 
   createBall (x: number, y: number, bombType?: string): void {
     const isBombType = !!bombType;
-    const textures = [Assets.ball_a.key, Assets.ball_b.key, Assets.ball_c.key];
+    const textures = [Assets.ball_a.key, Assets.ball_b.key, Assets.ball_c.key, Assets.ball_d.key];
     const textureKey = isBombType ? bombType : Phaser.Utils.Array.GetRandom(textures);
     const ballScaleModifier = isBombType ? 1.85 : 1.695;
 
@@ -74,15 +74,15 @@ export class BallView implements BaseView {
     const radiusModifier = isBombType ? 2 : 1.8;
     const radius = gameObject.displayHeight / radiusModifier;
     gameObject.setCircle(radius, {
-      restitution: 0.35,
-      friction: 0.002,
+      restitution: 0.03,
+      friction: 0.01,
       density
     });
     gameObject.setAngularVelocity(0.015);
 
-    // TODO: Move this to controler!
     this.registerColliderEvent(gameObject);
     this.registerOnClickAction(gameObject, bombType);
+
     this.setBallOnCollection(gameObject);
   }
 
@@ -129,7 +129,8 @@ export class BallView implements BaseView {
           y: this.ballCollection.get(ballId)!.y,
         };
 
-        this.createBall(targetBallPos.x, targetBallPos.y, Assets.ball_bomb_a.key);
+        const bombType = Assets.ball_bomb_a.key;
+        this.createBall(targetBallPos.x, targetBallPos.y, bombType);
       }
 
       dispatchOnTapBall(selectedIdsToDestroy);
