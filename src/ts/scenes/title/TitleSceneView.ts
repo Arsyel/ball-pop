@@ -1,5 +1,6 @@
 import { Assets } from "../../collections/AssetsTitle";
 import { BaseView } from "../../modules/core/BaseView";
+import { ButtonLabelUIView } from "./ui/ButtonLabelUIView";
 import { ButtonUIView } from "./ui/ButtonUIView";
 import { CharPanelUIView } from "./ui/CharPanelUIView";
 import { CustomTypes } from "../../../types/custom";
@@ -8,7 +9,6 @@ import { InfoPanelUIView } from "./ui/InfoPanelUIView";
 import { LAYER_DEPTH } from "../../helper/GeneralHelper";
 import { Rectangle } from "../../modules/gameobjects/Rectangle";
 import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
-import { Sprite } from "../../modules/gameobjects/Sprite";
 
 export const enum EventNames {
 	onClickPlay = "onClickPlay",
@@ -33,13 +33,9 @@ export class TitleSceneView implements BaseView {
   private _charPanelUI: CharPanelUIView;
 
   private _titleContainer: Phaser.GameObjects.Container;
-  private _selectCharContainer: Phaser.GameObjects.Container;
 
   private _titleText: Phaser.GameObjects.Text;
   private _titleTween: Phaser.Tweens.Tween;
-
-  private _playBtn: Sprite;
-  private _playBtnLabel: Phaser.GameObjects.Text;
 
   constructor (private _scene: Phaser.Scene) {
     this.screenUtility = ScreenUtilController.getInstance();
@@ -51,22 +47,6 @@ export class TitleSceneView implements BaseView {
 
     this.createBackground();
     this.createTitleText();
-    this.createPlayBtn();
-
-    const backBtn = new ButtonUIView(this._scene, {
-      texture: Assets.back_btn.key,
-      ratio: this._screenRatio,
-      onClick: () => {
-        if (this._screenState === "HOME_SCREEN") {
-          this.event.emit(EventNames.onClickBack);
-        }
-        else if ((this._screenState === "INFO_SCREEN") || (this._screenState === "PICK_CHAR_SCREEN")) {
-          this.event.emit(EventNames.onChangeScreen, "HOME_SCREEN");
-        }
-      },
-      position: { x: this.screenUtility.width * 0.015, y: this.screenUtility.height * 0.01 }
-    });
-    backBtn.gameObject.setOrigin(0, 0);
 
     const audioTextures = [ Assets.mute_btn.key, Assets.unmute_btn.key ];
     const audioBtn = new ButtonUIView(this._scene, {
@@ -118,16 +98,37 @@ export class TitleSceneView implements BaseView {
     });
     rewardBtn.gameObject.setOrigin(1, 0);
 
+    const playBtn = new ButtonLabelUIView(this._scene, {
+      label: "MULAI MAIN",
+      position: { x: this.screenUtility.centerX, y: this.screenUtility.height * 0.8 },
+      ratio: this._screenRatio,
+      onClick: () => this.event.emit(EventNames.onChangeScreen, "PICK_CHAR_SCREEN"),
+    });
+
     this._titleContainer = this._scene.add.container(0, 0, [
       this._titleText,
-      this._playBtn.gameObject,
-      this._playBtnLabel,
+      playBtn.gameObject,
       leaderboardBtn.gameObject,
       shareBtn.gameObject,
       rewardBtn.gameObject,
       audioBtn.gameObject,
       infoBtn.gameObject,
     ]).setDepth(LAYER_DEPTH.UI);
+
+    const backBtn = new ButtonUIView(this._scene, {
+      texture: Assets.back_btn.key,
+      ratio: this._screenRatio,
+      onClick: () => {
+        if (this._screenState === "HOME_SCREEN") {
+          this.event.emit(EventNames.onClickBack);
+        }
+        else if ((this._screenState === "INFO_SCREEN") || (this._screenState === "PICK_CHAR_SCREEN")) {
+          this.event.emit(EventNames.onChangeScreen, "HOME_SCREEN");
+        }
+      },
+      position: { x: this.screenUtility.width * 0.015, y: this.screenUtility.height * 0.01 }
+    });
+    backBtn.gameObject.setOrigin(0, 0);
 
     this._infoPanelUI = new InfoPanelUIView(this._scene, {
       ratio: this._screenRatio,
@@ -180,47 +181,6 @@ export class TitleSceneView implements BaseView {
       ease: Phaser.Math.Easing.Back.Out,
     });
     this._titleTween.play();
-  }
-
-  private createPlayBtn (): void {
-    const { centerX, height } = this.screenUtility;
-    this._playBtn = new Sprite(this._scene, centerX, height * 0.8, Assets.base_btn.key);
-    this._playBtn.transform.setToScaleDisplaySize(this._screenRatio);
-
-    const onClick = (): void => {
-      this.event.emit(EventNames.onChangeScreen, "PICK_CHAR_SCREEN");
-    };
-
-    const playBtnScale = this._playBtn.gameObject.scale;
-    const playBtnTween = this._scene.tweens.create({
-      targets: [this._playBtn.gameObject],
-      props: {
-        scale: { getStart: () => playBtnScale, getEnd: () => playBtnScale * 0.98 }
-      },
-      duration: 60,
-      yoyo: true,
-      onComplete: onClick
-    });
-
-    this._playBtn.gameObject.setInteractive({ useHandCursor: true }).on("pointerdown", () => {
-      if (playBtnTween.isPlaying()) return;
-      playBtnTween.play();
-    });
-
-    const playBtnConstraint = {
-      pos: this._playBtn.transform.getDisplayPositionFromCoordinate(0.5, 0.48),
-      style: {
-        wordWrap: {
-          width: this._playBtn.transform.displayWidth
-        },
-        fontFamily: FontAsset.roboto.key,
-        color: "#5d4035",
-        align: "center",
-        fontSize: `${64 * this._playBtn.transform.displayToOriginalHeightRatio}px`
-      } as Phaser.Types.GameObjects.Text.TextStyle
-    };
-    this._playBtnLabel = this._scene.add.text(playBtnConstraint.pos.x, playBtnConstraint.pos.y, "MULAI MAIN", playBtnConstraint.style);
-    this._playBtnLabel.setOrigin(0.5);
   }
 
   showScreen (state: CustomTypes.Title.ScreenState): void {
