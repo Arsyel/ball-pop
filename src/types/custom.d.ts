@@ -40,6 +40,18 @@ export declare namespace CustomTypes {
                 reason: string;
             };
 
+            type KeyValue = {
+                k: string;
+                v: string;
+            }
+
+            type CTAType = {
+                text: string;
+                url: string;
+                appLink: string;
+                type: string;
+            }
+
             type Profile = {
                 user_id: string;
                 first_name: string;
@@ -87,6 +99,32 @@ export declare namespace CustomTypes {
                     nextTimeWindowID: number;
                 };
                 gameInfo: string;
+            }
+
+            type GameStart = {
+                resultStatus: ResultStatus;
+                gameSessionID: string;
+                currentTimeWindowID: number;
+                gameData: KeyValue[];
+            }
+
+            type GameFinish = {
+                resultStatus: ResultStatus;
+                score: number;
+                scoreStr: string;
+                adsDetail: {
+                    name: string;
+                    contentURL: string;
+                    durationSeconds: number;
+                    cta: CTAType;
+                    extraScore: number;
+                };
+                benefit: {
+                    imageURL: string;
+                    benefitType: string;
+                    benefits: unknown[];
+                    ctaButton: CTAType;
+                };
             }
 
         }

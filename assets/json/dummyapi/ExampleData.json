@@ -86,6 +86,105 @@
         "nextTimeWindowID": 0
       },
       "gameInfo": ""
+    },
+    "gameStart": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "gameSessionID": "1632887271078",
+      "currentTimeWindowID": 17279,
+      "gameData": [
+        {
+          "k": "d91b87c4",
+          "v": "101;307;606;983;1504;2159;2839;3589;4407;5406"
+        },
+        {
+          "k": "Y",
+          "v": "15"
+        },
+        {
+          "k": "X",
+          "v": "10"
+        },
+        {
+          "k": "D",
+          "v": "2"
+        },
+        {
+          "k": "B",
+          "v": "4"
+        },
+        {
+          "k": "J",
+          "v": "1"
+        },
+        {
+          "k": "opponent_avatar_url",
+          "v": "https://ecs7.tokopedia.net/img/cache/300/default_picture_user/default_toped-17.jpg"
+        },
+        {
+          "k": "T",
+          "v": "2"
+        },
+        {
+          "k": "opponent_name",
+          "v": "Arif Budiman"
+        },
+        {
+          "k": "P",
+          "v": "3"
+        },
+        {
+          "k": "E",
+          "v": "4"
+        },
+        {
+          "k": "C",
+          "v": "3"
+        },
+        {
+          "k": "Z",
+          "v": "20"
+        }
+      ]
+    },
+    "gameFinish": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "score": 0,
+      "scoreStr": "+0",
+      "adsDetail": {
+        "name": "",
+        "contentURL": "",
+        "durationSeconds": 0,
+        "cta": {
+          "text": "",
+          "url": "",
+          "appLink": "",
+          "type": ""
+        },
+        "extraScore": 0
+      },
+      "benefit": {
+        "imageURL": "",
+        "benefitType": "",
+        "benefits": [],
+        "ctaButton": {
+          "text": "",
+          "url": "",
+          "appLink": "",
+          "type": ""
+        }
+      }
     }
   }
 }
