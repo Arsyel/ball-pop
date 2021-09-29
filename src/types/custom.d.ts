@@ -30,7 +30,66 @@ export declare namespace CustomTypes {
         type ErrorData = {
             origin: string;
             err: any;
-        };
+        }
+
+        namespace Data {
+
+            type ResultStatus = {
+                code: number;
+                message: string[];
+                reason: string;
+            };
+
+            type Profile = {
+                user_id: string;
+                first_name: string;
+                full_name: string;
+                email: string;
+                phone_masked: string;
+                profile_picture: string;
+            }
+
+            type GameMilestonesList = {
+                resultStatus: ResultStatus;
+                milestones: {
+                    threshold: number;
+                    thresholdStr: string;
+                    benefitDescription: string[];
+                    iconURL: string;
+                    achievedIconURL: string;
+                    isAchieved: boolean;
+                }[];
+            }
+
+            type GameUserData = {
+                resultStatus: ResultStatus;
+                currentCumulativeScore: number;
+                playCount: number;
+            }
+
+            type GameDetail = {
+                resultStatus: ResultStatus;
+                name: string;
+                slug: string;
+                status: number;
+                description: string;
+                durationSecond: number,
+                leaderboardCampaignID: number,
+                liveFeedChannelID: number,
+                gameToken: {
+                    tokenLeft: number;
+                    tokenLeftStr: string;
+                    pointCost: number;
+                };
+                playButton: {
+                    state: string;
+                    text: string;
+                    nextTimeWindowID: number;
+                };
+                gameInfo: string;
+            }
+
+        }
 
     }
 
