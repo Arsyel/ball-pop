@@ -37,6 +37,8 @@
     "webpack-obfuscator": "^1.1.0"
   },
   "dependencies": {
+    "graphql": "^15.6.0",
+    "graphql-request": "^3.5.0",
     "phaser": "3.24.1",
     "short-uuid": "^4.2.0"
   }

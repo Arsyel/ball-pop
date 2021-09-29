@@ -24,14 +24,16 @@ export class GameplaySceneController extends Phaser.Scene {
     super({key: SceneInfo.GAMEPLAY.key});
   }
 
-  init (): void {
+  init (data: CustomTypes.Network.Data.GameStart): void {
     this.view = new GameplaySceneView(this);
     this.audioController = AudioController.getInstance();
     this.worldPhysicController = new WorldPhysicControler(this);
     this.gameController = new GameController();
     this.ballController = new BallController(this);
 
-    this.gameController.onInitialization(({ timer }) => {
+    this.gameController.onInitialization(({ timer, gameStart }) => {
+      console.log("gameStart:", gameStart);
+
       this.view.updateTimerText(timer);
       this.ballController.init({ screenRatio: this.view.screenRatio });
     });
@@ -102,6 +104,7 @@ export class GameplaySceneController extends Phaser.Scene {
       this.gameController.init({
         timer: 90,
         maxLiveBall: 40,
+        gameStart: data
       });
     });
   }

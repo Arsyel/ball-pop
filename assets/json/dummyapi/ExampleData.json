@@ -1,0 +1,190 @@
+{
+  "data": {
+    "profile": {
+      "user_id": "12427532",
+      "first_name": "Arsyel",
+      "full_name": "Arsyel Abdulhakim",
+      "email": "ahmad.fire@gmail.com",
+      "phone_masked": "XXXX-XXXX-3658",
+      "profile_picture": "https://ecs7.tokopedia.net/img/cache/300/user-1/2021/7/18/12427532/12427532_1a7c9633-dc5b-4d3d-8990-56f8af8159fb.png"
+    },
+    "gameMilestonesList": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "milestones": [
+        {
+          "threshold": 1000,
+          "thresholdStr": "Kumpulkan 1.000 Skor",
+          "benefitDescription": [
+            "100 TokoPoints"
+          ],
+          "iconURL": "",
+          "achievedIconURL": "",
+          "isAchieved": true
+        },
+        {
+          "threshold": 3000,
+          "thresholdStr": "Kumpulkan 3.000 Skor",
+          "benefitDescription": [
+            "200 TokoPoints"
+          ],
+          "iconURL": "",
+          "achievedIconURL": "",
+          "isAchieved": true
+        },
+        {
+          "threshold": 5000,
+          "thresholdStr": "Kumpulkan 5.000 Skor",
+          "benefitDescription": [
+            "500 TokoPoints"
+          ],
+          "iconURL": "",
+          "achievedIconURL": "",
+          "isAchieved": true
+        }
+      ]
+    },
+    "gameUserData": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "currentCumulativeScore": 21747,
+      "playCount": 30
+    },
+    "gameDetail": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "name": "ballpop test beauty",
+      "slug": "BALLPOP",
+      "status": 1,
+      "description": "<br>",
+      "durationSecond": 0,
+      "leaderboardCampaignID": 0,
+      "liveFeedChannelID": 0,
+      "gameToken": {
+        "tokenLeft": 462,
+        "tokenLeftStr": "462X",
+        "pointCost": 0
+      },
+      "playButton": {
+        "state": "ready",
+        "text": "MULAI MAIN",
+        "nextTimeWindowID": 0
+      },
+      "gameInfo": ""
+    },
+    "gameStart": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "gameSessionID": "1632887271078",
+      "currentTimeWindowID": 17279,
+      "gameData": [
+        {
+          "k": "d91b87c4",
+          "v": "101;307;606;983;1504;2159;2839;3589;4407;5406"
+        },
+        {
+          "k": "Y",
+          "v": "15"
+        },
+        {
+          "k": "X",
+          "v": "10"
+        },
+        {
+          "k": "D",
+          "v": "2"
+        },
+        {
+          "k": "B",
+          "v": "4"
+        },
+        {
+          "k": "J",
+          "v": "1"
+        },
+        {
+          "k": "opponent_avatar_url",
+          "v": "https://ecs7.tokopedia.net/img/cache/300/default_picture_user/default_toped-17.jpg"
+        },
+        {
+          "k": "T",
+          "v": "2"
+        },
+        {
+          "k": "opponent_name",
+          "v": "Arif Budiman"
+        },
+        {
+          "k": "P",
+          "v": "3"
+        },
+        {
+          "k": "E",
+          "v": "4"
+        },
+        {
+          "k": "C",
+          "v": "3"
+        },
+        {
+          "k": "Z",
+          "v": "20"
+        }
+      ]
+    },
+    "gameFinish": {
+      "resultStatus": {
+        "code": "200",
+        "message": [
+          "Success"
+        ],
+        "reason": "OK"
+      },
+      "score": 0,
+      "scoreStr": "+0",
+      "adsDetail": {
+        "name": "",
+        "contentURL": "",
+        "durationSeconds": 0,
+        "cta": {
+          "text": "",
+          "url": "",
+          "appLink": "",
+          "type": ""
+        },
+        "extraScore": 0
+      },
+      "benefit": {
+        "imageURL": "",
+        "benefitType": "",
+        "benefits": [],
+        "ctaButton": {
+          "text": "",
+          "url": "",
+          "appLink": "",
+          "type": ""
+        }
+      }
+    }
+  }
+}

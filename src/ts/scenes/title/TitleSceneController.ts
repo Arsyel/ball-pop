@@ -1,5 +1,7 @@
 import { EventNames, TitleSceneView } from "./TitleSceneView";
 
+import { APIController } from "../../modules/api/APIController";
+import { BaseAPIInstance } from "../../modules/api/BaseAPIInstances";
 import { CustomTypes } from "../../../types/custom";
 import { DebugController } from "../gameplay/debug/DebugController";
 import { SceneInfo } from "../../info/SceneInfo";
@@ -15,6 +17,7 @@ export class TitleSceneController extends Phaser.Scene {
 
   view: TitleSceneView;
   debugController: DebugController;
+  apiController: BaseAPIInstance;
 
   constructor () {
     super({key: SceneInfo.TITLE.key});
@@ -23,9 +26,39 @@ export class TitleSceneController extends Phaser.Scene {
   init (): void {
     this.view = new TitleSceneView(this);
     this.debugController = new DebugController(this);
+    this.apiController = APIController.getInstance().getApi();
+
+    this.apiController.onError((errData) => {
+      console.log("Err origin", errData.origin);
+      console.log("All error", errData.err);
+    });
+
+    this.apiController.onGetTestAPICall((data: unknown) => {
+      console.log("API Data:", data);
+    });
+
+    this.apiController.onGetProfile((data) => {
+      console.log("Profile:", data);
+    });
+
+    this.apiController.onGetGameMilestonesList((data) => {
+      console.log("GameMilestonesList:", data);
+    });
+
+    this.apiController.onGetGameUserData((data) => {
+      console.log("GameUserData:", data);
+    });
+
+    this.apiController.onGetGameDetail((data) => {
+      console.log("GameDetail:", data);
+    });
+
+    this.apiController.onGetGameStart((gameStartData) => {
+      this.scene.start(SceneInfo.GAMEPLAY.key, gameStartData);
+    });
 
     this.onClickPlay(() => {
-      this.scene.start(SceneInfo.GAMEPLAY.key);
+      this.apiController.getGameStart();
     });
 
     this.onClickBack(() => {
@@ -36,7 +69,10 @@ export class TitleSceneController extends Phaser.Scene {
       console.log({ isAudioOn });
     });
 
-    this.onClickShare(() => {});
+    this.onClickShare(() => {
+      // FIXME Test post api
+      this.apiController.postTestAPICall();
+    });
 
     this.onChangeScreen((screenState) => {
       this.view.showScreen(screenState);
@@ -45,6 +81,14 @@ export class TitleSceneController extends Phaser.Scene {
     this.onCreateFinish(() => {
       this.debugController.init();
       this.debugController.show(true);
+
+      // API Call
+      this.apiController.getTestAPICall();
+
+      this.apiController.getProfile();
+      this.apiController.getGameMilestonesList();
+      this.apiController.getGameUserData();
+      this.apiController.getGameDetail();
     });
   }
 

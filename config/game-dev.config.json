@@ -1,4 +1,5 @@
 {
     "MODE": "DEVELOPMENT",
-    "ENABLE_PHYSICS_DEBUG": true
+    "ENABLE_PHYSICS_DEBUG": true,
+    "BASE_API_URL": "http://localhost:4000"
 }
