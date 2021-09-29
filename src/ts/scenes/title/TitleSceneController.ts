@@ -38,11 +38,23 @@ export class TitleSceneController extends Phaser.Scene {
     });
 
     this.apiController.onGetProfile((data) => {
-      console.log("Profile data:", data.full_name);
+      console.log("Profile:", data);
+    });
+
+    this.apiController.onGetGameMilestonesList((data) => {
+      console.log("GameMilestonesList:", data);
+    });
+
+    this.apiController.onGetGameUserData((data) => {
+      console.log("GameUserData:", data);
+    });
+
+    this.apiController.onGetGameDetail((data) => {
+      console.log("GameDetail:", data);
     });
 
     this.apiController.onGetGameStart((data) => {
-      console.log("GameStart data:", data);
+      console.log("GameStart:", data);
       this.scene.start(SceneInfo.GAMEPLAY.key);
     });
 
@@ -73,7 +85,11 @@ export class TitleSceneController extends Phaser.Scene {
 
       // API Call
       this.apiController.getTestAPICall();
+
       this.apiController.getProfile();
+      this.apiController.getGameMilestonesList();
+      this.apiController.getGameUserData();
+      this.apiController.getGameDetail();
     });
   }
 

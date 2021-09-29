@@ -40,32 +40,4 @@ export class GraphqlAPIController extends BaseAPIInstance {
       });
   }
 
-  getProfile (): void {
-    console.log("Call get profile graphql!");
-  }
-
-  getGameMilestonesList (): void {
-    throw new Error("Method not implemented.");
-  }
-
-  getGameUserData (): void {
-    throw new Error("Method not implemented.");
-  }
-
-  getGameDetail (): void {
-    throw new Error("Method not implemented.");
-  }
-
-  getGameStart (): void {
-    new Promise(() => {
-      this.event.emit(EventNames.onGetGameStart, {
-        data: { message: "getGameStart still not implemented" }
-      });
-    });
-  }
-
-  getGameFinish (): void {
-    throw new Error("Method not implemented.");
-  }
-
 }

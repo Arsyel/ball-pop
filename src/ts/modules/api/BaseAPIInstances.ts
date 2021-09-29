@@ -32,17 +32,53 @@ export abstract class BaseAPIInstance {
 
   abstract postTestAPICall (): void;
 
-  abstract getProfile (): void;
+  getProfile (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetProfile, {
+        data: { message: "getProfile still not implemented" }
+      });
+    });
+  }
 
-  abstract getGameMilestonesList (): void;
+  getGameMilestonesList (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameMilestonesList, {
+        data: { message: "getGameMilestonesList still not implemented" }
+      });
+    });
+  }
 
-  abstract getGameUserData (): void;
+  getGameUserData (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameUserData, {
+        data: { message: "getGameUserData still not implemented" }
+      });
+    });
+  }
 
-  abstract getGameDetail (): void;
+  getGameDetail (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameDetail, {
+        data: { message: "getGameDetail still not implemented" }
+      });
+    });
+  }
 
-  abstract getGameStart (): void;
+  getGameStart (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameStart, {
+        data: { message: "getGameStart still not implemented" }
+      });
+    });
+  }
 
-  abstract getGameFinish (): void;
+  getGameFinish (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameFinish, {
+        data: { message: "getGameFinish still not implemented" }
+      });
+    });
+  }
 
   //#region Event
   onError (event: OnError): void {
