@@ -1,19 +1,23 @@
 import { CustomTypes } from "../../../types/custom";
 
-export type OnError = (errData: CustomTypes.Network.ErrorData) => void;
-export type OnGetTestAPICall = CustomTypes.General.FunctionWithParams;
-export type OnGetProfile = (profile: CustomTypes.Network.Data.Profile) => void;
-export type OnGetGameMilestonesList = CustomTypes.General.FunctionWithParams;
-export type OnGetGameUserData = CustomTypes.General.FunctionWithParams;
-export type OnGetGameDetail = CustomTypes.General.FunctionWithParams;
+type OnError = (errData: CustomTypes.Network.ErrorData) => void;
+type OnGetTestAPICall = CustomTypes.General.FunctionWithParams;
+type OnGetProfile = (profile: CustomTypes.Network.Data.Profile) => void;
+type OnGetGameMilestonesList = CustomTypes.General.FunctionWithParams;
+type OnGetGameUserData = CustomTypes.General.FunctionWithParams;
+type OnGetGameDetail = CustomTypes.General.FunctionWithParams;
+type OnGetGameStart = (gameStart: CustomTypes.Network.Data.GameStart) => void;
+type OnGetGameFinish = CustomTypes.General.FunctionWithParams;
 
 export const enum EventNames {
-	onError = "onError",
-	onGetTestAPICall = "onGetTestAPICall",
-	onGetProfile = "onGetProfile",
+  onError = "onError",
+  onGetTestAPICall = "onGetTestAPICall",
+  onGetProfile = "onGetProfile",
   onGetGameMilestonesList = "onGetGameMilestonesList",
   onGetGameUserData = "onGetGameUserData",
   onGetGameDetail = "onGetGameDetail",
+  onGetGameStart = "onGetGameStart",
+  onGetGameFinish = "onGetGameFinish",
 };
 
 export abstract class BaseAPIInstance {
@@ -36,16 +40,42 @@ export abstract class BaseAPIInstance {
 
   abstract getGameDetail (): void;
 
-  abstract onError (event: OnError): void;
+  abstract getGameStart (): void;
 
-  abstract onGetTestAPICall (event: OnGetTestAPICall): void;
+  abstract getGameFinish (): void;
 
-  abstract onGetProfile (event: OnGetProfile): void;
+  //#region Event
+  onError (event: OnError): void {
+    this.event.on(EventNames.onError, event);
+  }
 
-  abstract onGetGameMilestonesList (event: OnGetGameMilestonesList): void;
+  onGetTestAPICall (event: OnGetTestAPICall): void {
+    this.event.on(EventNames.onGetTestAPICall, event);
+  }
 
-  abstract onGetGameUserData (event: OnGetGameUserData): void;
+  onGetProfile (event: OnGetProfile): void {
+    this.event.on(EventNames.onGetProfile, event);
+  }
 
-  abstract onGetGameDetail (event: OnGetGameDetail): void;
+  onGetGameMilestonesList (event: OnGetGameMilestonesList): void {
+    this.event.on(EventNames.onGetGameMilestonesList, event);
+  }
+
+  onGetGameUserData (event: OnGetGameUserData): void {
+    this.event.on(EventNames.onGetGameUserData, event);
+  }
+
+  onGetGameDetail (event: OnGetGameDetail): void {
+    this.event.on(EventNames.onGetGameDetail, event);
+  }
+
+  onGetGameStart (event: OnGetGameStart): void {
+    this.event.on(EventNames.onGetGameStart, event);
+  }
+
+  onGetGameFinish (event: OnGetGameFinish): void {
+    this.event.on(EventNames.onGetGameFinish, event);
+  }
+  //#endregion
 
 }

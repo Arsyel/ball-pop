@@ -1,4 +1,4 @@
-import { BaseAPIInstance, EventNames, OnError, OnGetGameDetail, OnGetGameMilestonesList, OnGetGameUserData, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
+import { BaseAPIInstance, EventNames } from "./BaseAPIInstances";
 
 import { APIController } from "./APIController";
 import { GetObjectProp } from "../../helper/GeneralHelper";
@@ -45,9 +45,7 @@ export class DummyAPIController extends BaseAPIInstance {
   postTestAPICall (): void {
     new Promise(() => {
       this.event.emit(EventNames.onGetTestAPICall, {
-        data: {
-          message: "Test call postTestAPICall on dummy api"
-        }
+        data: { message: "Test call postTestAPICall on dummy api" }
       });
     });
   }
@@ -92,28 +90,24 @@ export class DummyAPIController extends BaseAPIInstance {
       });
   }
 
-  onError (event: OnError): void {
-    this.event.on(EventNames.onError, event);
+  getGameStart (): void {
+    this.getRequest("data/gameStart")
+      .then((data) => {
+        this.event.emit(EventNames.onGetGameStart, data);
+      })
+      .catch((err) => {
+        this.event.emit(EventNames.onError, { origin: "getGameStart", err });
+      });
   }
 
-  onGetTestAPICall (event: OnGetTestAPICall): void {
-    this.event.on(EventNames.onGetTestAPICall, event);
-  }
-
-  onGetProfile (event: OnGetProfile): void {
-    this.event.on(EventNames.onGetProfile, event);
-  }
-
-  onGetGameMilestonesList (event: OnGetGameMilestonesList): void {
-    this.event.on(EventNames.onGetGameMilestonesList, event);
-  }
-
-  onGetGameUserData (event: OnGetGameUserData): void {
-    this.event.on(EventNames.onGetGameUserData, event);
-  }
-
-  onGetGameDetail (event: OnGetGameDetail): void {
-    this.event.on(EventNames.onGetGameDetail, event);
+  getGameFinish (): void {
+    this.getRequest("data/gameFinish")
+      .then((data) => {
+        this.event.emit(EventNames.onGetGameFinish, data);
+      })
+      .catch((err) => {
+        this.event.emit(EventNames.onError, { origin: "getGameFinish", err });
+      });
   }
 
 }

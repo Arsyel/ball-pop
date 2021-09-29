@@ -1,4 +1,4 @@
-import { BaseAPIInstance, EventNames, OnError, OnGetGameDetail, OnGetGameMilestonesList, OnGetGameUserData, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
+import { BaseAPIInstance, EventNames } from "./BaseAPIInstances";
 import { addBookMutation, getBooksQuery } from "./queries/Query";
 
 import { GetObjectProp } from "../../helper/GeneralHelper";
@@ -56,28 +56,16 @@ export class GraphqlAPIController extends BaseAPIInstance {
     throw new Error("Method not implemented.");
   }
 
-  onError (event: OnError): void {
-    this.event.on(EventNames.onError, event);
+  getGameStart (): void {
+    new Promise(() => {
+      this.event.emit(EventNames.onGetGameStart, {
+        data: { message: "getGameStart still not implemented" }
+      });
+    });
   }
 
-  onGetTestAPICall (event: OnGetTestAPICall): void {
-    this.event.on(EventNames.onGetTestAPICall, event);
-  }
-
-  onGetProfile (event: OnGetProfile): void {
-    this.event.on(EventNames.onGetProfile, event);
-  }
-
-  onGetGameMilestonesList (event: OnGetGameMilestonesList): void {
-    this.event.on(EventNames.onGetGameMilestonesList, event);
-  }
-
-  onGetGameUserData (event: OnGetGameUserData): void {
-    this.event.on(EventNames.onGetGameUserData, event);
-  }
-
-  onGetGameDetail (event: OnGetGameDetail): void {
-    this.event.on(EventNames.onGetGameDetail, event);
+  getGameFinish (): void {
+    throw new Error("Method not implemented.");
   }
 
 }
