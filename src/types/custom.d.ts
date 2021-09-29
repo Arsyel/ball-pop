@@ -168,6 +168,7 @@ export declare namespace CustomTypes {
         type GameData = {
             timer: number;
             maxLiveBall: number;
+            gameStart: Network.Data.GameStart;
         }
 
         type GeneralData = {

@@ -53,9 +53,8 @@ export class TitleSceneController extends Phaser.Scene {
       console.log("GameDetail:", data);
     });
 
-    this.apiController.onGetGameStart((data) => {
-      console.log("GameStart:", data);
-      this.scene.start(SceneInfo.GAMEPLAY.key);
+    this.apiController.onGetGameStart((gameStartData) => {
+      this.scene.start(SceneInfo.GAMEPLAY.key, gameStartData);
     });
 
     this.onClickPlay(() => {
