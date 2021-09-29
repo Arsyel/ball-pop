@@ -11,12 +11,12 @@ import { Rectangle } from "../../modules/gameobjects/Rectangle";
 import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
 
 export const enum EventNames {
-	onClickPlay = "onClickPlay",
-	onClickBack = "onClickBack",
-	onClickAudio = "onClickAudio",
+  onClickPlay = "onClickPlay",
+  onClickBack = "onClickBack",
+  onClickAudio = "onClickAudio",
   onClickShare = "onClickShare",
   onChangeScreen = "onChangeScreen",
-	onCreateFinish = "onCreateFinish",
+  onCreateFinish = "onCreateFinish",
 };
 
 export class TitleSceneView implements BaseView {
@@ -149,17 +149,17 @@ export class TitleSceneView implements BaseView {
   }
 
   private createBackground (): void {
-	  const { centerX, centerY, width, height } = this.screenUtility;
-	  const MAX_WIDTH_DIMENSION = 1080;
-	  const MAX_HEIGHT_DIMENSION = 1920;
-	  const COLOR = 0xfafafa;
-	  this._screenBackground = new Rectangle(this._scene, centerX, centerY, MAX_WIDTH_DIMENSION, MAX_HEIGHT_DIMENSION, COLOR, 0.8);
-	  this._screenBackground.transform.setMinPreferredDisplaySize(width, height);
-	  this._screenRatio = this._screenBackground.transform.displayToOriginalWidthRatio;
+    const { centerX, centerY, width, height } = this.screenUtility;
+    const MAX_WIDTH_DIMENSION = 1080;
+    const MAX_HEIGHT_DIMENSION = 1920;
+    const COLOR = 0xfafafa;
+    this._screenBackground = new Rectangle(this._scene, centerX, centerY, MAX_WIDTH_DIMENSION, MAX_HEIGHT_DIMENSION, COLOR, 0.8);
+    this._screenBackground.transform.setMinPreferredDisplaySize(width, height);
+    this._screenRatio = this._screenBackground.transform.displayToOriginalWidthRatio;
   }
 
   private createTitleText (): void {
-	  const { centerX, centerY } = this.screenUtility;
+    const { centerX, centerY } = this.screenUtility;
     const style = {
       align: "center",
       color: "#000",
