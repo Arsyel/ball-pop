@@ -1,6 +1,7 @@
 import { Assets } from "../../../collections/AssetGameplay";
 import { BaseView } from "../../../modules/core/BaseView";
 import { CustomTypes } from "../../../../types/custom";
+import { GetObjectProp } from "../../../helper/GeneralHelper";
 import { MatterSprite } from "../../../modules/gameobjects/MatterSprite";
 import { ScreenUtilController } from "../../../modules/screenutility/ScreenUtilController";
 
@@ -31,7 +32,7 @@ export class WorldPhysicView implements BaseView {
   private createBallHolder (): void {
     const { centerX, height } = this.screenUtility;
     const shapeConfig = {
-      shape : Reflect.get(this._scene.cache.json.get(Assets.holder_json.key), "holder"),
+      shape : GetObjectProp(this._scene.cache.json.get(Assets.holder_json.key), "holder"),
     } as Phaser.Types.Physics.Matter.MatterBodyConfig;
     this._ballHolder = new MatterSprite(this._scene, 0, 0, Assets.holder.key, 0, shapeConfig);
     this._ballHolder.transform.setToScaleDisplaySize(this._data.screenRatio);
