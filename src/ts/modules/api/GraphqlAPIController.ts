@@ -1,4 +1,4 @@
-import { BaseAPIInstance, EventNames, OnError, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
+import { BaseAPIInstance, EventNames, OnError, OnGetGameDetail, OnGetGameMilestonesList, OnGetGameUserData, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
 import { addBookMutation, getBooksQuery } from "./queries/Query";
 
 import { GetObjectProp } from "../../helper/GeneralHelper";
@@ -66,6 +66,18 @@ export class GraphqlAPIController extends BaseAPIInstance {
 
   onGetProfile (event: OnGetProfile): void {
     this.event.on(EventNames.onGetProfile, event);
+  }
+
+  onGetGameMilestonesList (event: OnGetGameMilestonesList): void {
+    this.event.on(EventNames.onGetGameMilestonesList, event);
+  }
+
+  onGetGameUserData (event: OnGetGameUserData): void {
+    this.event.on(EventNames.onGetGameUserData, event);
+  }
+
+  onGetGameDetail (event: OnGetGameDetail): void {
+    this.event.on(EventNames.onGetGameDetail, event);
   }
 
 }

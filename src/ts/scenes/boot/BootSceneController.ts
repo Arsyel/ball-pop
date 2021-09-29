@@ -1,8 +1,9 @@
-import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
-import { LoaderHelper } from "../../helper/LoaderHelper";
+import { APIController } from "../../modules/api/APIController";
 import { AudioController } from "../../modules/audio/AudioController";
-import { SceneInfo } from "../../info/SceneInfo";
 import { FontList } from "../../collections/AssetFont";
+import { LoaderHelper } from "../../helper/LoaderHelper";
+import { SceneInfo } from "../../info/SceneInfo";
+import { ScreenUtilController } from "../../modules/screenutility/ScreenUtilController";
 
 export class BootSceneController extends Phaser.Scene {
 
@@ -17,6 +18,7 @@ export class BootSceneController extends Phaser.Scene {
       ScreenUtilController.getInstance().init(this),
       AudioController.getInstance().init(this),
       LoaderHelper.LoadFonts(FontList()),
+      APIController.getInstance().init({ scene: this }),
     ]).then(() => {
       this.scene.launch(SceneInfo.LOADING.key);
     }).catch((error) => Error("Bootscene::\n" + error));

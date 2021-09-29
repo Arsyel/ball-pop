@@ -34,7 +34,11 @@ export class TitleSceneController extends Phaser.Scene {
     });
 
     this.apiController.onGetTestAPICall((data: unknown) => {
-      console.log("Data:", data);
+      console.log("API Data:", data);
+    });
+
+    this.apiController.onGetProfile((data) => {
+      console.log("Profile data:", data.full_name);
     });
 
     this.onClickPlay(() => {
@@ -50,7 +54,7 @@ export class TitleSceneController extends Phaser.Scene {
     });
 
     this.onClickShare(() => {
-      // FIXME Test api
+      // FIXME Test post api
       this.apiController.postTestAPICall();
     });
 
@@ -61,7 +65,10 @@ export class TitleSceneController extends Phaser.Scene {
     this.onCreateFinish(() => {
       this.debugController.init();
       this.debugController.show(true);
+
+      // API Call
       this.apiController.getTestAPICall();
+      this.apiController.getProfile();
     });
   }
 
