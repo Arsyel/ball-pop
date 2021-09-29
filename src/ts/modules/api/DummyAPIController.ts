@@ -1,21 +1,19 @@
 import { BaseAPIInstance, EventNames, OnError, OnGetGameDetail, OnGetGameMilestonesList, OnGetGameUserData, OnGetProfile, OnGetTestAPICall } from "./BaseAPIInstances";
 
 import { APIController } from "./APIController";
-import { CONFIG } from "../../info/GameInfo";
 import { GetObjectProp } from "../../helper/GeneralHelper";
-
-const EXAMPLE_ENDPOINT = "json/dummyapi/ExampleData.json";
+import { getRoute } from "./helper/Helper";
 
 export class DummyAPIController extends BaseAPIInstance {
 
-  private getRequest (key: string, url: string): Promise<any> {
+  private getRequest (key: string): Promise<any> {
     // Mimic graphql data response
     const KEY_JSON = "dummyData";
     const parseKey = key.split("/");
 
     return new Promise((resolve, reject) => {
       const { scene } = APIController.getInstance().getDummyAPIRef();
-      const loader = scene.load.json(KEY_JSON, CONFIG.BASE_ASSET_URL + url);
+      const loader = scene.load.json(KEY_JSON, getRoute("/ExampleData.json"));
       loader.once(Phaser.Loader.Events.COMPLETE, () => {
         const dummyData = scene.cache.json.get(KEY_JSON);
         let data = dummyData;
@@ -35,7 +33,7 @@ export class DummyAPIController extends BaseAPIInstance {
   }
 
   getTestAPICall (): void {
-    this.getRequest("data", EXAMPLE_ENDPOINT)
+    this.getRequest("data")
       .then((data) => {
         this.event.emit(EventNames.onGetTestAPICall, data);
       })
@@ -55,7 +53,7 @@ export class DummyAPIController extends BaseAPIInstance {
   }
 
   getProfile (): void {
-    this.getRequest("data/profile", EXAMPLE_ENDPOINT)
+    this.getRequest("data/profile")
       .then((data) => {
         this.event.emit(EventNames.onGetProfile, data);
       })
@@ -65,7 +63,7 @@ export class DummyAPIController extends BaseAPIInstance {
   }
 
   getGameMilestonesList (): void {
-    this.getRequest("data/gameMilestonesList", EXAMPLE_ENDPOINT)
+    this.getRequest("data/gameMilestonesList")
       .then((data) => {
         this.event.emit(EventNames.onGetGameMilestonesList, data);
       })
@@ -75,7 +73,7 @@ export class DummyAPIController extends BaseAPIInstance {
   }
 
   getGameUserData (): void {
-    this.getRequest("data/gameUserData", EXAMPLE_ENDPOINT)
+    this.getRequest("data/gameUserData")
       .then((data) => {
         this.event.emit(EventNames.onGetGameUserData, data);
       })
@@ -85,7 +83,7 @@ export class DummyAPIController extends BaseAPIInstance {
   }
 
   getGameDetail (): void {
-    this.getRequest("data/gameDetail", EXAMPLE_ENDPOINT)
+    this.getRequest("data/gameDetail")
       .then((data) => {
         this.event.emit(EventNames.onGetGameDetail, data);
       })
