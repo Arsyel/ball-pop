@@ -7,3 +7,15 @@ export function ShuffleArray (array: []): [] {
 	}
 	return array;
 }
+
+export function get (callbackValue: () => any, fallbackValue: any = null): unknown {
+	let val = fallbackValue;
+	try {
+		val = callbackValue();
+		if (typeof val === 'undefined') {
+			return fallbackValue;
+		}
+	}
+	catch {}
+	return val;
+}
