@@ -52,6 +52,14 @@ export declare namespace CustomTypes {
 
     }
 
-    namespace Gameplay {}
+    namespace Gameplay {
+
+        type GeneralData = {
+            screenRatio: number;
+            initialPos?: { x: number, y: number }
+            data?: any;
+        }
+
+    }
 
 }
