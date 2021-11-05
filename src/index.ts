@@ -55,7 +55,7 @@ const screenProfile = portraitConversion(calculateScreen());
 const isFirefox = /Firefox/i.test(navigator.userAgent);
 
 // Set to WebGL in Firefox, using Canvas in Firefox somehow create performance / lagging issues
-const renderType = isFirefox ? Phaser.WEBGL : Phaser.CANVAS;
+const renderType = isFirefox ? Phaser.WEBGL : Phaser.AUTO;
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   version: CONFIG.VERSION,
@@ -74,7 +74,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "matter",
     matter: {
-      debug: (CONFIG.MODE === "SANDBOX"),
+      debug: (CONFIG.MODE === "DEVELOPMENT"),
       correction: 2,
       positionIterations: 8,
     },
